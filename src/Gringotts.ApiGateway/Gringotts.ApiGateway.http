@@ -1,0 +1,6 @@
+@Gringotts.ApiGateway_HostAddress = http://localhost:5153
+
+GET {{Gringotts.ApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

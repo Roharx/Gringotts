@@ -1,0 +1,58 @@
+# Build Folders (you can keep bin/ and obj/ if you need them for local builds)
+[Bb]in/
+[Oo]bj/
+
+# VS Code settings
+.vscode/
+
+# Visual Studio temporary files, build results, and
+# user-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains files
+.idea/
+*.sln.iml
+
+# NuGet packages
+*.nupkg
+# NuGet symbol packages
+*.snupkg
+# The packages folder can be ignored because of PackageReference
+**/packages/
+
+# Dotnet Core specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+*.trx
+
+# Environment Variables
+*.env
+
+# Docker files (if you have local overrides, but keep docker-compose.yml in version control)
+docker-compose.override.yml
+
+# npm / yarn logs (if you use any JS tooling in your solution)
+npm-debug.log*
+yarn-error.log*
+
+# Others
+*.swp
+*.swo

@@ -1,0 +1,6 @@
+@Gringotts.TransactionPublisher_HostAddress = http://localhost:5234
+
+GET {{Gringotts.TransactionPublisher_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

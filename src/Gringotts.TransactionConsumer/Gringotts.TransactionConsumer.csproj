@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Gringotts.TransactionConsumer-905e4194-3cee-4a90-a6fa-dcc5b6d78a19</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <!-- Remove conflicting appsettings files from the publish output -->
+  <ItemGroup>
+    <Content Remove="**/appsettings.json" />
+    <Content Remove="**/appsettings.Development.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.4.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.4.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gringotts.LedgerService\Gringotts.LedgerService.csproj" />
+    <ProjectReference Include="..\Gringotts.Shared\Gringotts.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+
+</Project>

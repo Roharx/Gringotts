@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <!-- Reference the projects containing your EF Core context and shared models -->
+  <ItemGroup>
+    <ProjectReference Include="..\Gringotts.LedgerService\Gringotts.LedgerService.csproj" />
+    <ProjectReference Include="..\Gringotts.Shared\Gringotts.Shared.csproj" />
+  </ItemGroup>
+
+  <!-- Remove conflicting appsettings files from publish output -->
+  <ItemGroup>
+    <Content Remove="**/appsettings.json" />
+    <Content Remove="**/appsettings.Development.json" />
+  </ItemGroup>
+
+  <!-- Ensure consistent EF Core package versions -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+
+</Project>

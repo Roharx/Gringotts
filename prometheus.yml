@@ -1,0 +1,12 @@
+﻿global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'gringotts'
+    static_configs:
+      - targets:
+          - 'transactionpublisher:8080'
+          - 'transactionconsumer:80'
+          - 'currencyservice:80'
+          - 'ledgerservice:80'
+          - 'apigateway:80'
