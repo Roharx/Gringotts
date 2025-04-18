@@ -3,6 +3,7 @@ using OpenTelemetry.Resources;
 using Prometheus;
 using OpenTelemetry.Trace;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Read RabbitMQ settings from configuration/environment variables.
