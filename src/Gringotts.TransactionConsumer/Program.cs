@@ -21,6 +21,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         // Register the transaction consumer service.
         services.AddHostedService<TransactionConsumerService>();
+        services.AddHostedService<MetricsServer>();
 
         // Configure OpenTelemetry Tracing for the TransactionConsumer.
         services.AddOpenTelemetry()

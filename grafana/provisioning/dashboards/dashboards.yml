@@ -1,0 +1,9 @@
+﻿apiVersion: 1
+
+providers:
+  - name: 'Gringotts Dashboards'
+    folder: 'Gringotts'
+    type: file
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards/json

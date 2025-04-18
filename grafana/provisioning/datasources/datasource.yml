@@ -1,0 +1,21 @@
+﻿apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+
+  - name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    jsonData:
+      tracesToLogs:
+        datasourceUid: 'Prometheus'
+        spanStartTimeShift: '1h'
+        spanEndTimeShift: '1h'
+        tags: [{ key: 'http.method', value: 'GET' }]
+        filterByTraceID: true
+        filterBySpanID: false

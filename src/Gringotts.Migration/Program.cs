@@ -18,7 +18,11 @@ var host = Host.CreateDefaultBuilder(args)
         var dbName = Environment.GetEnvironmentVariable("POSTGRES_DB") ?? "gringottsdb";
         var dbUser = Environment.GetEnvironmentVariable("POSTGRES_USER") ?? "gringotts";
         var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "gringotts";
-        var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+        var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
+        if (string.IsNullOrWhiteSpace(connectionString))
+            connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+
 
         // Register the LedgerDbContext with the Npgsql provider
         services.AddDbContext<LedgerDbContext>(options =>
@@ -39,6 +43,7 @@ while (true)
             Console.WriteLine("Applying Ledger migrations...");
             dbContext.Database.Migrate();
         }
+
         Console.WriteLine("Migrations applied successfully.");
         break;
     }
@@ -50,6 +55,7 @@ while (true)
             Console.WriteLine("Max attempts reached. Exiting.");
             throw;
         }
+
         Console.WriteLine($"Attempt {attempts} failed (database is starting up). Waiting before retrying...");
         Thread.Sleep(2000);
     }
@@ -61,6 +67,7 @@ while (true)
             Console.WriteLine("Max attempts reached. Exiting.");
             throw;
         }
+
         Console.WriteLine($"Attempt {attempts} failed (socket error: {ex.Message}). Waiting before retrying...");
         Thread.Sleep(2000);
     }

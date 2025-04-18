@@ -3,10 +3,11 @@
 
 scrape_configs:
   - job_name: 'gringotts'
+    metrics_path: /metrics
     static_configs:
       - targets:
           - 'transactionpublisher:8080'
-          - 'transactionconsumer:80'
-          - 'currencyservice:80'
-          - 'ledgerservice:80'
-          - 'apigateway:80'
+          - 'ledgerservice:8080'
+          - 'apigateway:8080'
+          - 'transactionconsumer:8080'
+          - 'currencyservice:8080'
