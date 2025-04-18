@@ -3,6 +3,8 @@ using Gringotts.LedgerService.Data;
 using Gringotts.TransactionConsumer.Services;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OpenTelemetry;
+using OpenTelemetry.Context.Propagation;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -22,6 +24,13 @@ var host = Host.CreateDefaultBuilder(args)
         // Register the transaction consumer service.
         services.AddHostedService<TransactionConsumerService>();
         services.AddHostedService<MetricsServer>();
+        
+        
+        Sdk.SetDefaultTextMapPropagator(new CompositeTextMapPropagator(new TextMapPropagator[]
+        {
+            new TraceContextPropagator(),
+            new BaggagePropagator()
+        }));
 
         // Configure OpenTelemetry Tracing for the TransactionConsumer.
         services.AddOpenTelemetry()
