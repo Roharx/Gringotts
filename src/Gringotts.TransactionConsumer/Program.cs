@@ -5,6 +5,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
+using Prometheus;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -21,11 +22,20 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddDbContext<LedgerDbContext>(options =>
             options.UseNpgsql(connectionString));
 
-        // Register the transaction consumer service.
+        // Register Prometheus metrics for injection
+        var messageCounter = Metrics.CreateCounter("transaction_consumer_messages_total", "Total messages consumed");
+        var processingDuration = Metrics.CreateHistogram("transaction_consumer_processing_duration_seconds", "Duration of processing messages");
+
+        services.AddSingleton(messageCounter);
+        services.AddSingleton(processingDuration);
+
+        // Register the transaction consumer service
         services.AddHostedService<TransactionConsumerService>();
-        services.AddHostedService<MetricsServer>();
-        
-        
+
+        // Register Prometheus metrics server on port 8080
+        new KestrelMetricServer(port: 8080).Start();
+
+        // Propagation context for OpenTelemetry
         Sdk.SetDefaultTextMapPropagator(new CompositeTextMapPropagator(new TextMapPropagator[]
         {
             new TraceContextPropagator(),
