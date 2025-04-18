@@ -150,6 +150,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=yourpassword
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning/dashboards/json:/etc/grafana/provisioning/dashboards/json
     depends_on:
       - prometheus
       - jaeger

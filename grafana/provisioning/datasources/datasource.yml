@@ -16,6 +16,6 @@ datasources:
         datasourceUid: 'Prometheus'
         spanStartTimeShift: '1h'
         spanEndTimeShift: '1h'
-        tags: [{ key: 'http.method', value: 'GET' }]
+        tags: ['http.method=GET']
         filterByTraceID: true
         filterBySpanID: false

@@ -1,0 +1,90 @@
+{
+  "id": null,
+  "uid": "transaction-publisher",
+  "title": "Transaction Publisher",
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "10s",
+  "overwrite": true,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Total HTTP Requests",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "microsoft_aspnetcore_hosting_total_requests{job=\"gringotts\",instance=\"transactionpublisher:8080\"}",
+          "legendFormat": "Total",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Request Duration (avg)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(microsoft_aspnetcore_hosting_http_server_request_duration_sum{job=\"gringotts\",instance=\"transactionpublisher:8080\"}[1m]) / rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{job=\"gringotts\",instance=\"transactionpublisher:8080\"}[1m])",
+          "legendFormat": "Avg Duration (s)",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": ".NET GC Heap Size (bytes)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "system_runtime_gc_heap_size{job=\"gringotts\",instance=\"transactionpublisher:8080\"}",
+          "legendFormat": "GC Heap",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Total Memory Allocated (.NET)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "dotnet_total_memory_bytes{job=\"gringotts\",instance=\"transactionpublisher:8080\"}",
+          "legendFormat": "Memory",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      }
+    }
+  ],
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  }
+}
