@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Gringotts.LedgerService.Data;
+using OpenTelemetry;
+using OpenTelemetry.Context.Propagation;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Prometheus;
@@ -16,6 +18,13 @@ var connectionString = $"Host={host};Port={port};Database={database};Username={u
 
 builder.Services.AddDbContext<LedgerDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+// W3C Context Propagation
+Sdk.SetDefaultTextMapPropagator(new CompositeTextMapPropagator(new TextMapPropagator[]
+{
+    new TraceContextPropagator(),
+    new BaggagePropagator()
+}));
 
 // Configure OpenTelemetry Tracing for LedgerService using the new API.
 builder.Services.AddOpenTelemetry()
@@ -36,6 +45,7 @@ builder.Services.AddOpenTelemetry()
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
