@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Read RabbitMQ settings from configuration/environment variables.
 var rabbitHost = builder.Configuration["RABBITMQ_HOST"] ?? "rabbitmq";
-var rabbitPort = int.Parse(builder.Configuration["RABBITMQ_PORT"] ?? "5672");
+var rabbitPort = int.TryParse(builder.Configuration["RABBITMQ_PORT"], out var parsedPort) ? parsedPort : 5672;
+
 
 // Register the TransactionMessageProducer service.
 builder.Services.AddSingleton(new TransactionMessageProducer(rabbitHost, rabbitPort));

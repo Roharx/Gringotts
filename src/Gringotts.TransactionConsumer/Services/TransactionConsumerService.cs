@@ -35,7 +35,7 @@ namespace Gringotts.TransactionConsumer.Services
             var factory = new ConnectionFactory()
             {
                 HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitmq",
-                Port = int.Parse(Environment.GetEnvironmentVariable("RABBITMQ_PORT") ?? "5672")
+                Port = int.TryParse(Environment.GetEnvironmentVariable("RABBITMQ_PORT"), out var port) ? port : 5672
             };
 
             for (int attempt = 1; attempt <= 5; attempt++)
