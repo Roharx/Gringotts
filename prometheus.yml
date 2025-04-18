@@ -11,3 +11,7 @@ scrape_configs:
           - 'apigateway:8080'
           - 'transactionconsumer:8080'
           - 'currencyservice:8080'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [ 'localhost:9090' ]
