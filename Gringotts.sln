@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gringotts.Integration.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gringotts.System.Tests", "tests\Gringotts.System.Tests\Gringotts.System.Tests.csproj", "{3E70B992-325C-4CF6-8F37-25C3FB7E9365}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gringotts.CurrencyService.Tests", "tests\Gringotts.CurrencyService.Tests\Gringotts.CurrencyService.Tests.csproj", "{1B186D6D-2C81-41A5-8CB3-035FEED85F34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{3E70B992-325C-4CF6-8F37-25C3FB7E9365}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E70B992-325C-4CF6-8F37-25C3FB7E9365}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E70B992-325C-4CF6-8F37-25C3FB7E9365}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B186D6D-2C81-41A5-8CB3-035FEED85F34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B186D6D-2C81-41A5-8CB3-035FEED85F34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B186D6D-2C81-41A5-8CB3-035FEED85F34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B186D6D-2C81-41A5-8CB3-035FEED85F34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3AB68A6C-B766-4C7B-AE34-F60EBD4EC701} = {31666C3C-A425-4DCD-B788-8B29BCDA89BA}
@@ -88,5 +94,6 @@ Global
 		{D8BD2935-9C75-4F45-9DD4-53A5FBC0B66F} = {1160278A-7C03-4E56-8C59-947D9B2B6066}
 		{654E43C7-23B6-49E4-846F-A3CBB6E75695} = {1160278A-7C03-4E56-8C59-947D9B2B6066}
 		{3E70B992-325C-4CF6-8F37-25C3FB7E9365} = {1160278A-7C03-4E56-8C59-947D9B2B6066}
+		{1B186D6D-2C81-41A5-8CB3-035FEED85F34} = {1160278A-7C03-4E56-8C59-947D9B2B6066}
 	EndGlobalSection
 EndGlobal
