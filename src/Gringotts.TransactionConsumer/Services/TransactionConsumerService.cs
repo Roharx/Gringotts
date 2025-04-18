@@ -8,6 +8,7 @@ using Gringotts.Shared.Models;
 using OpenTelemetry.Context.Propagation;
 using System.Diagnostics;
 using OpenTelemetry;
+using Prometheus;
 
 namespace Gringotts.TransactionConsumer.Services
 {
@@ -18,21 +19,29 @@ namespace Gringotts.TransactionConsumer.Services
 
         private readonly ILogger<TransactionConsumerService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly Counter _messageCounter;
+        private readonly Histogram _processingDuration;
         private IConnection _connection;
         private IModel _channel;
         private const string QueueName = "transactionQueue";
         private static readonly ConcurrentDictionary<Guid, int> _retryCounts = new();
 
-        public TransactionConsumerService(ILogger<TransactionConsumerService> logger, IServiceScopeFactory scopeFactory)
+        public TransactionConsumerService(
+            ILogger<TransactionConsumerService> logger,
+            IServiceScopeFactory scopeFactory,
+            Counter messageCounter,
+            Histogram processingDuration)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
+            _messageCounter = messageCounter;
+            _processingDuration = processingDuration;
             InitializeRabbitMQ();
         }
 
         private void InitializeRabbitMQ()
         {
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
             {
                 HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitmq",
                 Port = int.TryParse(Environment.GetEnvironmentVariable("RABBITMQ_PORT"), out var port) ? port : 5672
@@ -84,10 +93,13 @@ namespace Gringotts.TransactionConsumer.Services
                 Baggage.Current = parentContext.Baggage;
 
                 using var activity = ActivitySource.StartActivity("Consume Transaction", ActivityKind.Consumer, parentContext.ActivityContext);
-
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 _logger.LogInformation("Received: {Message}", message);
+
+                // Record the metrics
+                _messageCounter.Inc();
+                using var timer = _processingDuration.NewTimer();
 
                 try
                 {

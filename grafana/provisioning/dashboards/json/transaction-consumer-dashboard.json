@@ -1,0 +1,70 @@
+{
+  "id": null,
+  "uid": "transaction-consumer",
+  "title": "Transaction Consumer",
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "10s",
+  "overwrite": true,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Total Messages Consumed",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "transaction_consumer_messages_total",
+          "legendFormat": "Messages",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 0 },
+      "id": 1
+    },
+    {
+      "type": "timeseries",
+      "title": "Message Processing Duration (avg)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(transaction_consumer_processing_duration_seconds_sum[1m]) / rate(transaction_consumer_processing_duration_seconds_count[1m])",
+          "legendFormat": "Avg Duration (s)",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 9 },
+      "id": 2
+    },
+    {
+      "type": "timeseries",
+      "title": ".NET GC Heap Size (bytes)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "system_runtime_gc_heap_size{job=\"gringotts\",instance=\"transactionconsumer:8080\"}",
+          "legendFormat": "GC Heap",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 18 },
+      "id": 3
+    },
+    {
+      "type": "timeseries",
+      "title": "Total Memory Allocated (.NET)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "dotnet_total_memory_bytes{job=\"gringotts\",instance=\"transactionconsumer:8080\"}",
+          "legendFormat": "Memory",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 27 },
+      "id": 4
+    }
+  ],
+  "templating": { "list": [] },
+  "annotations": { "list": [] }
+}
