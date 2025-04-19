@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 
 var client = new HttpClient { BaseAddress = new Uri("http://localhost:5002/") }; // LedgerService
 var baseUrl = "http://localhost:5002";

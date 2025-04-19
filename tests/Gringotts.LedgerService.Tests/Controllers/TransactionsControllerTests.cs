@@ -5,6 +5,8 @@ using Gringotts.LedgerService.Data;
 using Gringotts.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 
 namespace Gringotts.LedgerService.Tests.Controllers
 {

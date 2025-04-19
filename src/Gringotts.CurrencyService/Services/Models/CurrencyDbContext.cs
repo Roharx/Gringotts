@@ -1,4 +1,5 @@
 ﻿using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.LedgerService;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gringotts.CurrencyService.Services.Models

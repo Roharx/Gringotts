@@ -1,4 +1,8 @@
 ﻿using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.ApiGateway;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gringotts.ApiGateway.Controllers;

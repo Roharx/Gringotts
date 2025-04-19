@@ -2,6 +2,8 @@
 using Gringotts.CurrencyService.Services;
 using Gringotts.CurrencyService.Services.Interfaces;
 using Gringotts.CurrencyService.Services.Models;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gringotts.CurrencyService.Controllers

@@ -2,6 +2,8 @@
 using FluentAssertions;
 using Gringotts.Shared.Models;
 using Gringotts.CurrencyService.Services.Models;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

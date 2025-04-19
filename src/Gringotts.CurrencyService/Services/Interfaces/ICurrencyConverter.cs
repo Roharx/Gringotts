@@ -1,4 +1,5 @@
 ﻿using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.CurrencyService;
 
 namespace Gringotts.CurrencyService.Services.Interfaces
 {

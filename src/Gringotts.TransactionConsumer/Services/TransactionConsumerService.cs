@@ -7,6 +7,7 @@ using Gringotts.LedgerService.Data;
 using Gringotts.Shared.Models;
 using OpenTelemetry.Context.Propagation;
 using System.Diagnostics;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 using OpenTelemetry;
 using Prometheus;
 

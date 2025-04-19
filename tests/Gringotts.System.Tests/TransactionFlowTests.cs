@@ -2,6 +2,8 @@
 using System.Net.Http.Json;
 using FluentAssertions;
 using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 
 namespace Gringotts.System.Tests;
 
