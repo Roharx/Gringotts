@@ -57,7 +57,7 @@ while (true)
         }
 
         Console.WriteLine($"Attempt {attempts} failed (database is starting up). Waiting before retrying...");
-        Thread.Sleep(2000);
+        Thread.Sleep(10000);
     }
     catch (SocketException ex)
     {

@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Gringotts.Shared.Models.LedgerService.TransactionService
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RecurrenceFrequency
     {
         Daily,
@@ -10,7 +12,6 @@ namespace Gringotts.Shared.Models.LedgerService.TransactionService
         Monthly,
         Yearly
     }
-
     public class RecurringTransaction
     {
         [Key]

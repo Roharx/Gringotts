@@ -1,52 +1,133 @@
 {
-  "id": null,
-  "title": "Users Controller Metrics",
+  "title": "Users Dashboard",
+  "uid": "users-dashboard",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "5s",
   "panels": [
     {
       "type": "stat",
       "title": "Users Registered",
-      "targets": [
-        {
-          "expr": "users_created_total",
-          "format": "time_series"
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "users_registered_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "palette-classic" },
+          "decimals": 0
         }
-      ],
-      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 }
+      }
     },
     {
       "type": "stat",
       "title": "Failed Registrations",
-      "targets": [
-        {
-          "expr": "users_registration_failed_total",
-          "format": "time_series"
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "users_failed_registrations_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "palette-classic" },
+          "decimals": 0
         }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "User Registrations Over Time",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 6 },
+      "targets": [
+        { "expr": "rate(users_registered_total[5m])", "legendFormat": "Registrations" }
       ],
-      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 }
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failed Registrations Over Time",
+      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 6 },
+      "targets": [
+        { "expr": "rate(users_failed_registrations_total[5m])", "legendFormat": "Failed" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      }
     },
     {
       "type": "stat",
       "title": "Login Attempts",
-      "targets": [
-        {
-          "expr": "users_login_attempts_total",
-          "format": "time_series"
+      "gridPos": { "x": 0, "y": 16, "w": 6, "h": 4 },
+      "targets": [{ "expr": "users_login_attempts_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "palette-classic" },
+          "decimals": 0
         }
-      ],
-      "gridPos": { "x": 0, "y": 5, "w": 6, "h": 5 }
+      }
     },
     {
       "type": "stat",
       "title": "Failed Logins",
-      "targets": [
-        {
-          "expr": "users_login_failed_total",
-          "format": "time_series"
+      "gridPos": { "x": 6, "y": 16, "w": 6, "h": 4 },
+      "targets": [{ "expr": "users_failed_logins_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "palette-classic" },
+          "decimals": 0
         }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Login Attempts Over Time",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 6 },
+      "targets": [
+        { "expr": "rate(users_login_attempts_total[5m])", "legendFormat": "Attempts" }
       ],
-      "gridPos": { "x": 6, "y": 5, "w": 6, "h": 5 }
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failed Logins Over Time",
+      "gridPos": { "x": 0, "y": 26, "w": 12, "h": 6 },
+      "targets": [
+        { "expr": "rate(users_failed_logins_total[5m])", "legendFormat": "Failed" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      }
     }
-  ],
-  "schemaVersion": 36,
-  "version": 1
+  ]
 }

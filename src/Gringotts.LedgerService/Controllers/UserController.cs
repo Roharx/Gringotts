@@ -16,6 +16,7 @@ public class UsersController : ControllerBase
     private static readonly Counter LoginAttempts = Metrics.CreateCounter("users_login_attempts_total", "Total login attempts.");
     private static readonly Counter FailedLogins = Metrics.CreateCounter("users_failed_logins_total", "Total failed login attempts.");
     private static readonly Counter UserRetrievals = Metrics.CreateCounter("users_retrieved_total", "Total users retrieved.");
+    private static readonly Counter FailedRegistrations = Metrics.CreateCounter("users_failed_registrations_total", "Total failed user registration attempts.");
 
     private readonly LedgerDbContext _context;
     private readonly IPasswordHasher _hasher;
@@ -27,12 +28,23 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(User user)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        if (await _context.Users.AnyAsync(u => u.Username == user.Username || u.Email == user.Email))
+        if (await _context.Users.AnyAsync(u => u.Username == request.Username || u.Email == request.Email))
+        {
+            FailedRegistrations.Inc(); // <<== ADD THIS LINE
             return Conflict("Username or email already exists.");
+        }
 
-        user.PasswordHash = _hasher.HashPassword(user.PasswordHash);
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            Username = request.Username,
+            Email = request.Email,
+            DisplayName = request.DisplayName,
+            PasswordHash = _hasher.HashPassword(request.Password)
+        };
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
         Registrations.Inc();

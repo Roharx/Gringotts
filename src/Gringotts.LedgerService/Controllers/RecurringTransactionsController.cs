@@ -13,6 +13,9 @@ public class RecurringTransactionsController : ControllerBase
     private static readonly Counter RecurringCreates = Metrics.CreateCounter("recurring_transactions_created_total", "Recurring transactions created.");
     private static readonly Counter RecurringUpdates = Metrics.CreateCounter("recurring_transactions_updated_total", "Recurring transactions updated.");
     private static readonly Counter RecurringDeletes = Metrics.CreateCounter("recurring_transactions_deleted_total", "Recurring transactions deleted.");
+    private static readonly Counter RecurringFailedUpdates = Metrics.CreateCounter("recurring_transactions_failed_updates_total", "Recurring transactions that failed to update.");
+    private static readonly Counter RecurringFailedCreates = Metrics.CreateCounter("recurring_transactions_failed_creates_total", "Recurring transactions that failed to be created.");
+    private static readonly Counter RecurringFailedDeletes = Metrics.CreateCounter("recurring_transactions_failed_deletes_total", "Recurring transactions that failed to be deleted.");
 
     private readonly LedgerDbContext _context;
 
@@ -35,21 +38,37 @@ public class RecurringTransactionsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<RecurringTransaction>> Create(RecurringTransaction rt)
     {
-        rt.NextOccurrence = rt.NextOccurrence.ToUniversalTime();
-        _context.RecurringTransactions.Add(rt);
-        await _context.SaveChangesAsync();
-        RecurringCreates.Inc();
+        try
+        {
+            rt.NextOccurrence = rt.NextOccurrence.ToUniversalTime();
+            _context.RecurringTransactions.Add(rt);
+            await _context.SaveChangesAsync();
+            RecurringCreates.Inc();
 
-        return CreatedAtAction(nameof(GetById), new { id = rt.Id }, rt);
+            return CreatedAtAction(nameof(GetById), new { id = rt.Id }, rt);
+        }
+        catch
+        {
+            RecurringFailedCreates.Inc();
+            return StatusCode(500, "Failed to create recurring transaction.");
+        }
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, RecurringTransaction rt)
     {
-        if (id != rt.Id) return BadRequest("ID mismatch.");
+        if (id != rt.Id)
+        {
+            RecurringFailedUpdates.Inc();
+            return BadRequest("ID mismatch.");
+        }
 
         var existing = await _context.RecurringTransactions.FindAsync(id);
-        if (existing is null) return NotFound();
+        if (existing is null)
+        {
+            RecurringFailedUpdates.Inc();
+            return NotFound();
+        }
 
         existing.Description = rt.Description;
         existing.DkkAmount = rt.DkkAmount;
@@ -68,7 +87,11 @@ public class RecurringTransactionsController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         var existing = await _context.RecurringTransactions.FindAsync(id);
-        if (existing is null) return NotFound();
+        if (existing is null)
+        {
+            RecurringFailedDeletes.Inc();
+            return NotFound();
+        }
 
         _context.RecurringTransactions.Remove(existing);
         await _context.SaveChangesAsync();

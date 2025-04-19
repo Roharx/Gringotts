@@ -9,9 +9,10 @@ namespace Gringotts.LedgerService.Services
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPassword(string hashedPassword, string password)
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
+
     }
 }

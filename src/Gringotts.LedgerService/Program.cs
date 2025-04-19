@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Gringotts.LedgerService.Data;
+using Gringotts.LedgerService.Services;
+using Gringotts.LedgerService.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
@@ -47,6 +49,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+// Program.cs (before builder.Build())
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
 
 var app = builder.Build();
 
