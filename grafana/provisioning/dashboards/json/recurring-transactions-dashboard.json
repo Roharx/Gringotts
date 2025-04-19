@@ -1,0 +1,52 @@
+{
+  "id": null,
+  "title": "Recurring Transactions Metrics",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Recurring Created",
+      "targets": [
+        {
+          "expr": "recurring_transactions_created_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Updated Successfully",
+      "targets": [
+        {
+          "expr": "recurring_transactions_updated_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Deleted",
+      "targets": [
+        {
+          "expr": "recurring_transactions_deleted_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 5, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Updates",
+      "targets": [
+        {
+          "expr": "recurring_transactions_update_failed_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 5, "w": 6, "h": 5 }
+    }
+  ],
+  "schemaVersion": 36,
+  "version": 1
+}

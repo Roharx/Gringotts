@@ -1,0 +1,52 @@
+{
+  "id": null,
+  "title": "Transactions Controller Metrics",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Transactions Created",
+      "targets": [
+        {
+          "expr": "transactions_created_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Transaction Creates",
+      "targets": [
+        {
+          "expr": "transactions_create_failed_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Transaction Filters Performed",
+      "targets": [
+        {
+          "expr": "transactions_filtered_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 5, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Get By ID Failures",
+      "targets": [
+        {
+          "expr": "transactions_get_by_id_failed_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 5, "w": 6, "h": 5 }
+    }
+  ],
+  "schemaVersion": 36,
+  "version": 1
+}

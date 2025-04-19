@@ -1,0 +1,52 @@
+{
+  "id": null,
+  "title": "Users Controller Metrics",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Users Registered",
+      "targets": [
+        {
+          "expr": "users_created_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Registrations",
+      "targets": [
+        {
+          "expr": "users_registration_failed_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Login Attempts",
+      "targets": [
+        {
+          "expr": "users_login_attempts_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 5, "w": 6, "h": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Logins",
+      "targets": [
+        {
+          "expr": "users_login_failed_total",
+          "format": "time_series"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 5, "w": 6, "h": 5 }
+    }
+  ],
+  "schemaVersion": 36,
+  "version": 1
+}
