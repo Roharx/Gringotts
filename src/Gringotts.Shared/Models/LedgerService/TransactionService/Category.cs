@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Gringotts.Shared.Models
+namespace Gringotts.Shared.Models.LedgerService.TransactionService
 {
-    public class User
+    public class Category
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         
-        public string Username { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string PasswordHash { get; set; } = null!;
-        public string DisplayName { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
 
         public ICollection<Transaction>? Transactions { get; set; }
     }

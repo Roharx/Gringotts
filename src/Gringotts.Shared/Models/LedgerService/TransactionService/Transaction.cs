@@ -1,8 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService.UserService;
 
-namespace Gringotts.Shared.Models
+namespace Gringotts.Shared.Models.LedgerService.TransactionService
 {
     public class Transaction
     {

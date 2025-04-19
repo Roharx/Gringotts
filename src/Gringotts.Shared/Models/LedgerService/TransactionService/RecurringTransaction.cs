@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Gringotts.Shared.Models
+namespace Gringotts.Shared.Models.LedgerService.TransactionService
 {
     public enum RecurrenceFrequency
     {

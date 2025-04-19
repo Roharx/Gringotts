@@ -1,4 +1,4 @@
-﻿namespace Gringotts.Shared.Models
+﻿namespace Gringotts.Shared.Models.CurrencyService
 {
     public class Money
     {
