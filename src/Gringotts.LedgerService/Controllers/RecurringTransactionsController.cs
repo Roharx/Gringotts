@@ -1,8 +1,9 @@
-﻿using Prometheus;
-using Gringotts.LedgerService.Data;
-using Gringotts.Shared.Models.LedgerService.TransactionService;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
+using Gringotts.LedgerService.Data;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 
 namespace Gringotts.LedgerService.Controllers;
 
@@ -10,6 +11,8 @@ namespace Gringotts.LedgerService.Controllers;
 [Route("api/[controller]")]
 public class RecurringTransactionsController : ControllerBase
 {
+    private static readonly ActivitySource ActivitySource = new("LedgerService.RecurringTransactionsController");
+
     private static readonly Counter RecurringCreates = Metrics.CreateCounter("recurring_transactions_created_total", "Recurring transactions created.");
     private static readonly Counter RecurringUpdates = Metrics.CreateCounter("recurring_transactions_updated_total", "Recurring transactions updated.");
     private static readonly Counter RecurringDeletes = Metrics.CreateCounter("recurring_transactions_deleted_total", "Recurring transactions deleted.");
@@ -26,18 +29,31 @@ public class RecurringTransactionsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<RecurringTransaction>>> GetAll()
-        => await _context.RecurringTransactions.ToListAsync();
+    {
+        using var activity = ActivitySource.StartActivity("Get All Recurring Transactions", ActivityKind.Server);
+        var list = await _context.RecurringTransactions.ToListAsync();
+        activity?.SetTag("recurring.count", list.Count);
+        return list;
+    }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<RecurringTransaction>> GetById(Guid id)
     {
+        using var activity = ActivitySource.StartActivity("Get Recurring Transaction By Id", ActivityKind.Server);
         var rt = await _context.RecurringTransactions.FindAsync(id);
-        return rt is null ? NotFound() : Ok(rt);
+        if (rt == null)
+        {
+            activity?.SetStatus(ActivityStatusCode.Error, "Not found");
+            return NotFound();
+        }
+
+        return Ok(rt);
     }
 
     [HttpPost]
     public async Task<ActionResult<RecurringTransaction>> Create(RecurringTransaction rt)
     {
+        using var activity = ActivitySource.StartActivity("Create Recurring Transaction", ActivityKind.Server);
         try
         {
             rt.NextOccurrence = rt.NextOccurrence.ToUniversalTime();
@@ -47,8 +63,9 @@ public class RecurringTransactionsController : ControllerBase
 
             return CreatedAtAction(nameof(GetById), new { id = rt.Id }, rt);
         }
-        catch
+        catch (Exception ex)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
             RecurringFailedCreates.Inc();
             return StatusCode(500, "Failed to create recurring transaction.");
         }
@@ -57,15 +74,19 @@ public class RecurringTransactionsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, RecurringTransaction rt)
     {
+        using var activity = ActivitySource.StartActivity("Update Recurring Transaction", ActivityKind.Server);
+
         if (id != rt.Id)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, "ID mismatch");
             RecurringFailedUpdates.Inc();
             return BadRequest("ID mismatch.");
         }
 
         var existing = await _context.RecurringTransactions.FindAsync(id);
-        if (existing is null)
+        if (existing == null)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, "Not found");
             RecurringFailedUpdates.Inc();
             return NotFound();
         }
@@ -86,9 +107,12 @@ public class RecurringTransactionsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
+        using var activity = ActivitySource.StartActivity("Delete Recurring Transaction", ActivityKind.Server);
+
         var existing = await _context.RecurringTransactions.FindAsync(id);
-        if (existing is null)
+        if (existing == null)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, "Not found");
             RecurringFailedDeletes.Inc();
             return NotFound();
         }
