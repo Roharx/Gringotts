@@ -4,7 +4,9 @@ using Gringotts.LedgerService.Controllers;
 using Gringotts.LedgerService.Data;
 using Gringotts.LedgerService.Services;
 using Gringotts.LedgerService.Services.Interfaces;
+using Gringotts.Shared.Models;
 using Gringotts.Shared.Models.LedgerService.UserService;
+using System.Text.Json;
 
 namespace Gringotts.LedgerService.Tests.Controllers;
 
@@ -25,7 +27,8 @@ public class UsersControllerTests
     {
         var context = GetDbContext();
         var controller = new UsersController(context, GetHasher());
-        var user = new User
+
+        var request = new User
         {
             Username = "wizard1",
             Email = "wizard1@hogwarts.com",
@@ -33,10 +36,14 @@ public class UsersControllerTests
             PasswordHash = "plaintext"
         };
 
-        var result = await controller.Register(user);
+        var result = await controller.Register(request);
 
         var created = Assert.IsType<CreatedAtActionResult>(result);
-        Assert.Equal("wizard1", ((dynamic)created.Value).Username);
+        var json = JsonSerializer.Serialize(created.Value);
+        using var doc = JsonDocument.Parse(json);
+        var root = doc.RootElement;
+
+        Assert.Equal("wizard1", root.GetProperty("Username").GetString());
     }
 
     [Fact]
@@ -44,14 +51,13 @@ public class UsersControllerTests
     {
         var context = GetDbContext();
         var hasher = GetHasher();
-        var hashedPw = hasher.HashPassword("test123");
 
         var user = new User
         {
             Username = "validuser",
             Email = "valid@user.com",
             DisplayName = "Valid",
-            PasswordHash = hashedPw
+            PasswordHash = hasher.HashPassword("test123")
         };
 
         context.Users.Add(user);
@@ -65,6 +71,62 @@ public class UsersControllerTests
         });
 
         var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal("validuser", ((dynamic)ok.Value).Username);
+        var json = JsonSerializer.Serialize(ok.Value);
+        using var doc = JsonDocument.Parse(json);
+        var root = doc.RootElement;
+
+        Assert.Equal("validuser", root.GetProperty("Username").GetString());
+    }
+
+    [Fact]
+    public async Task Login_ShouldReturnUnauthorized_WhenPasswordIsWrong()
+    {
+        var context = GetDbContext();
+        var hasher = GetHasher();
+        var hashedPw = hasher.HashPassword("correctpass");
+
+        context.Users.Add(new User
+        {
+            Username = "wrongpwuser",
+            Email = "wrong@pw.com",
+            DisplayName = "Wrong Password",
+            PasswordHash = hashedPw
+        });
+        await context.SaveChangesAsync();
+
+        var controller = new UsersController(context, hasher);
+
+        var result = await controller.Login(new LoginRequest
+        {
+            Username = "wrongpwuser",
+            Password = "wrongpass"
+        });
+
+        Assert.IsType<UnauthorizedObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task GetByUsername_ShouldReturnCorrectUser()
+    {
+        var context = GetDbContext();
+        var user = new User
+        {
+            Username = "seeker",
+            Email = "seeker@hogwarts.com",
+            DisplayName = "Golden Snitch",
+            PasswordHash = "irrelevant"
+        };
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var controller = new UsersController(context, GetHasher());
+
+        var result = await controller.GetByUsername("seeker");
+        var ok = Assert.IsType<OkObjectResult>(result);
+        var json = JsonSerializer.Serialize(ok.Value);
+        using var doc = JsonDocument.Parse(json);
+        var root = doc.RootElement;
+
+        Assert.Equal("seeker", root.GetProperty("Username").GetString());
     }
 }
