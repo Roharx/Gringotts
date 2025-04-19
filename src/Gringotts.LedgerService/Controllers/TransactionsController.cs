@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Gringotts.LedgerService.Data;
 using Gringotts.Shared.Models;
 using System.Diagnostics;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 
 namespace Gringotts.LedgerService.Controllers
 {

@@ -1,6 +1,17 @@
-﻿namespace Gringotts.LedgerService.Services;
+﻿using Gringotts.LedgerService.Services.Interfaces;
 
-public class PasswordHasher
+namespace Gringotts.LedgerService.Services
 {
-    
+    public class PasswordHasher : IPasswordHasher
+    {
+        public string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        public bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+    }
 }

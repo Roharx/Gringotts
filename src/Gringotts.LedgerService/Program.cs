@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Gringotts.LedgerService.Data;
+using Microsoft.AspNetCore.Identity;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
 using OpenTelemetry.Resources;

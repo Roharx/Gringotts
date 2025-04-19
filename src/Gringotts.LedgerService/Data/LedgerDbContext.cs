@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.LedgerService;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
+using Gringotts.Shared.Models.LedgerService.UserService;
 
 namespace Gringotts.LedgerService.Data
 {
