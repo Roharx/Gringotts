@@ -4,65 +4,87 @@
   "title": "Currency Service",
   "timezone": "browser",
   "schemaVersion": 36,
-  "version": 1,
+  "version": 2,
   "refresh": "10s",
   "overwrite": true,
   "panels": [
     {
-      "type": "timeseries",
-      "title": "Total HTTP Requests",
+      "type": "stat",
+      "title": "Conversions To DKK",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "microsoft_aspnetcore_hosting_total_requests{job=\"gringotts\",instance=\"currencyservice:8080\"}",
-          "legendFormat": "Total Requests",
+          "expr": "currency_converted_to_dkk_total",
           "refId": "A"
         }
       ],
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 0 },
+      "gridPos": { "h": 5, "w": 12, "x": 0, "y": 0 },
       "id": 1
     },
     {
-      "type": "timeseries",
-      "title": "Request Duration (avg)",
+      "type": "stat",
+      "title": "Conversions From DKK",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "rate(microsoft_aspnetcore_hosting_http_server_request_duration_sum{job=\"gringotts\",instance=\"currencyservice:8080\"}[1m]) / rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{job=\"gringotts\",instance=\"currencyservice:8080\"}[1m])",
-          "legendFormat": "Avg Duration (s)",
-          "refId": "A"
+          "expr": "currency_converted_from_dkk_total",
+          "refId": "B"
         }
       ],
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 9 },
+      "gridPos": { "h": 5, "w": 12, "x": 12, "y": 0 },
       "id": 2
     },
     {
-      "type": "timeseries",
-      "title": ".NET GC Heap Size (bytes)",
+      "type": "stat",
+      "title": "Exchange Rate Updates",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "system_runtime_gc_heap_size{job=\"gringotts\",instance=\"currencyservice:8080\"}",
-          "legendFormat": "GC Heap",
-          "refId": "A"
+          "expr": "currency_exchange_rate_updates_total",
+          "refId": "C"
         }
       ],
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 18 },
+      "gridPos": { "h": 5, "w": 12, "x": 0, "y": 5 },
       "id": 3
     },
     {
-      "type": "timeseries",
-      "title": "Total Memory Allocated (.NET)",
+      "type": "stat",
+      "title": "Failed Exchange Updates",
       "datasource": "Prometheus",
       "targets": [
         {
-          "expr": "dotnet_total_memory_bytes{job=\"gringotts\",instance=\"currencyservice:8080\"}",
-          "legendFormat": "Memory",
-          "refId": "A"
+          "expr": "currency_exchange_rate_update_failures_total",
+          "refId": "D"
         }
       ],
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 27 },
+      "gridPos": { "h": 5, "w": 12, "x": 12, "y": 5 },
       "id": 4
+    },
+    {
+      "type": "timeseries",
+      "title": "Conversions To DKK (Over Time)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(currency_converted_to_dkk_total[1m])",
+          "refId": "E"
+        }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 10 },
+      "id": 5
+    },
+    {
+      "type": "timeseries",
+      "title": "Conversions From DKK (Over Time)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(currency_converted_from_dkk_total[1m])",
+          "refId": "F"
+        }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 19 },
+      "id": 6
     }
   ],
   "templating": { "list": [] },

@@ -92,12 +92,22 @@ namespace Gringotts.LedgerService.Data
             // Configure ExchangeRate
             modelBuilder.Entity<ExchangeRate>(entity =>
             {
-                entity.HasKey(er => er.Id);
-                entity.Property(er => er.GalleonToDkk)
-                      .IsRequired()
-                      .HasColumnType("numeric(18,2)");
-                entity.Property(er => er.EffectiveDate)
-                      .IsRequired();
+                  entity.HasKey(er => er.Id);
+
+                  entity.Property(er => er.GalleonToDkk)
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
+
+                  entity.Property(er => er.SickleToDkk)
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
+
+                  entity.Property(er => er.KnutToDkk)
+                        .IsRequired()
+                        .HasColumnType("numeric(18,2)");
+
+                  entity.Property(er => er.EffectiveDate)
+                        .IsRequired();
             });
 
             // Configure RecurringTransaction

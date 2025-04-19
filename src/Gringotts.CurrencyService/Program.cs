@@ -31,6 +31,7 @@ builder.Services.AddScoped<ICurrencyConverter, CurrencyConverter>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ICurrencyConverter, CurrencyConverter>();
 
 // Monitoring: Prometheus & Jaeger
 builder.Services.AddOpenTelemetry()

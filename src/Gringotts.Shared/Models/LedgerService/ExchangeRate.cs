@@ -10,6 +10,8 @@ namespace Gringotts.Shared.Models.LedgerService
         public Guid Id { get; set; }
         
         public decimal GalleonToDkk { get; set; }
+        public decimal SickleToDkk { get; set; }
+        public decimal KnutToDkk { get; set; }
         public DateTime EffectiveDate { get; set; }
     }
 }
