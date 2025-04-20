@@ -16,10 +16,17 @@ public class CurrencyController : ControllerBase
 {
     private static readonly ActivitySource ActivitySource = new("CurrencyService.CurrencyController");
 
-    private static readonly Counter ToDkkCounter = Metrics.CreateCounter("currency_converted_to_dkk_total", "Total conversions from wizarding currency to DKK.");
-    private static readonly Counter FromDkkCounter = Metrics.CreateCounter("currency_converted_from_dkk_total", "Total conversions from DKK to wizarding currency.");
-    private static readonly Counter ExchangeRateUpdates = Metrics.CreateCounter("currency_exchange_rate_updates_total", "Total exchange rate updates.");
-    private static readonly Counter FailedExchangeRateUpdates = Metrics.CreateCounter("currency_exchange_rate_update_failures_total", "Failed exchange rate updates.");
+    private static readonly Counter ToDkkCounter = Metrics.CreateCounter("currency_converted_to_dkk_total",
+        "Total conversions from wizarding currency to DKK.");
+
+    private static readonly Counter FromDkkCounter = Metrics.CreateCounter("currency_converted_from_dkk_total",
+        "Total conversions from DKK to wizarding currency.");
+
+    private static readonly Counter ExchangeRateUpdates =
+        Metrics.CreateCounter("currency_exchange_rate_updates_total", "Total exchange rate updates.");
+
+    private static readonly Counter FailedExchangeRateUpdates =
+        Metrics.CreateCounter("currency_exchange_rate_update_failures_total", "Failed exchange rate updates.");
 
     private readonly ICurrencyConverter _converter;
     private readonly CurrencyDbContext _context;

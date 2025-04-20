@@ -16,10 +16,17 @@ public class TransactionsController : ControllerBase
     private static readonly ActivitySource ActivitySource = new("LedgerService.TransactionsController");
 
     // Prometheus Counters
-    private static readonly Counter TransactionsCreated = Metrics.CreateCounter("transactions_created_total", "Total number of transactions successfully created.");
-    private static readonly Counter TransactionsFailed = Metrics.CreateCounter("transactions_failed_total", "Total number of failed transaction attempts.");
-    private static readonly Counter TransactionsFiltered = Metrics.CreateCounter("transactions_filtered_total", "Total filtered transaction queries.");
-    private static readonly Counter TransactionsByIdLookups = Metrics.CreateCounter("transactions_lookup_by_id_total", "Total transaction lookups by ID.");
+    private static readonly Counter TransactionsCreated = Metrics.CreateCounter("transactions_created_total",
+        "Total number of transactions successfully created.");
+
+    private static readonly Counter TransactionsFailed =
+        Metrics.CreateCounter("transactions_failed_total", "Total number of failed transaction attempts.");
+
+    private static readonly Counter TransactionsFiltered =
+        Metrics.CreateCounter("transactions_filtered_total", "Total filtered transaction queries.");
+
+    private static readonly Counter TransactionsByIdLookups =
+        Metrics.CreateCounter("transactions_lookup_by_id_total", "Total transaction lookups by ID.");
 
     public TransactionsController(LedgerDbContext context)
     {

@@ -39,6 +39,8 @@ while (true)
     {
         using (var scope = host.Services.CreateScope())
         {
+            Thread.Sleep(5000);
+            Console.WriteLine("Waiting 5 secounds for the database...");
             var dbContext = scope.ServiceProvider.GetRequiredService<LedgerDbContext>();
             Console.WriteLine("Applying Ledger migrations...");
             dbContext.Database.Migrate();

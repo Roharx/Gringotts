@@ -13,12 +13,26 @@ public class RecurringTransactionsController : ControllerBase
 {
     private static readonly ActivitySource ActivitySource = new("LedgerService.RecurringTransactionsController");
 
-    private static readonly Counter RecurringCreates = Metrics.CreateCounter("recurring_transactions_created_total", "Recurring transactions created.");
-    private static readonly Counter RecurringUpdates = Metrics.CreateCounter("recurring_transactions_updated_total", "Recurring transactions updated.");
-    private static readonly Counter RecurringDeletes = Metrics.CreateCounter("recurring_transactions_deleted_total", "Recurring transactions deleted.");
-    private static readonly Counter RecurringFailedUpdates = Metrics.CreateCounter("recurring_transactions_failed_updates_total", "Recurring transactions that failed to update.");
-    private static readonly Counter RecurringFailedCreates = Metrics.CreateCounter("recurring_transactions_failed_creates_total", "Recurring transactions that failed to be created.");
-    private static readonly Counter RecurringFailedDeletes = Metrics.CreateCounter("recurring_transactions_failed_deletes_total", "Recurring transactions that failed to be deleted.");
+    private static readonly Counter RecurringCreates =
+        Metrics.CreateCounter("recurring_transactions_created_total", "Recurring transactions created.");
+
+    private static readonly Counter RecurringUpdates =
+        Metrics.CreateCounter("recurring_transactions_updated_total", "Recurring transactions updated.");
+
+    private static readonly Counter RecurringDeletes =
+        Metrics.CreateCounter("recurring_transactions_deleted_total", "Recurring transactions deleted.");
+
+    private static readonly Counter RecurringFailedUpdates =
+        Metrics.CreateCounter("recurring_transactions_failed_updates_total",
+            "Recurring transactions that failed to update.");
+
+    private static readonly Counter RecurringFailedCreates =
+        Metrics.CreateCounter("recurring_transactions_failed_creates_total",
+            "Recurring transactions that failed to be created.");
+
+    private static readonly Counter RecurringFailedDeletes =
+        Metrics.CreateCounter("recurring_transactions_failed_deletes_total",
+            "Recurring transactions that failed to be deleted.");
 
     private readonly LedgerDbContext _context;
 

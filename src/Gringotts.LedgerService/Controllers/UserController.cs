@@ -12,11 +12,20 @@ namespace Gringotts.LedgerService.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private static readonly Counter Registrations = Metrics.CreateCounter("users_registered_total", "Total users registered.");
-    private static readonly Counter LoginAttempts = Metrics.CreateCounter("users_login_attempts_total", "Total login attempts.");
-    private static readonly Counter FailedLogins = Metrics.CreateCounter("users_failed_logins_total", "Total failed login attempts.");
-    private static readonly Counter UserRetrievals = Metrics.CreateCounter("users_retrieved_total", "Total users retrieved.");
-    private static readonly Counter FailedRegistrations = Metrics.CreateCounter("users_failed_registrations_total", "Total failed user registration attempts.");
+    private static readonly Counter Registrations =
+        Metrics.CreateCounter("users_registered_total", "Total users registered.");
+
+    private static readonly Counter LoginAttempts =
+        Metrics.CreateCounter("users_login_attempts_total", "Total login attempts.");
+
+    private static readonly Counter FailedLogins =
+        Metrics.CreateCounter("users_failed_logins_total", "Total failed login attempts.");
+
+    private static readonly Counter UserRetrievals =
+        Metrics.CreateCounter("users_retrieved_total", "Total users retrieved.");
+
+    private static readonly Counter FailedRegistrations =
+        Metrics.CreateCounter("users_failed_registrations_total", "Total failed user registration attempts.");
 
     private readonly LedgerDbContext _context;
     private readonly IPasswordHasher _hasher;
@@ -32,7 +41,7 @@ public class UsersController : ControllerBase
     {
         if (await _context.Users.AnyAsync(u => u.Username == request.Username || u.Email == request.Email))
         {
-            FailedRegistrations.Inc(); // <<== ADD THIS LINE
+            FailedRegistrations.Inc();
             return Conflict("Username or email already exists.");
         }
 
@@ -49,7 +58,8 @@ public class UsersController : ControllerBase
         await _context.SaveChangesAsync();
         Registrations.Inc();
 
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, new { user.Id, user.Username, user.Email, user.DisplayName });
+        return CreatedAtAction(nameof(GetById), new { id = user.Id },
+            new { user.Id, user.Username, user.Email, user.DisplayName });
     }
 
     [HttpPost("login")]

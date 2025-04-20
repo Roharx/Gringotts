@@ -4,7 +4,7 @@
   "title": "API Gateway",
   "timezone": "browser",
   "schemaVersion": 36,
-  "version": 1,
+  "version": 2,
   "refresh": "10s",
   "overwrite": true,
   "panels": [
@@ -38,6 +38,68 @@
     },
     {
       "type": "timeseries",
+      "title": "User Registration / Login",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_users_registered_total", "legendFormat": "Registered", "refId": "A" },
+        { "expr": "gateway_users_register_failed_total", "legendFormat": "Failed Register", "refId": "B" },
+        { "expr": "gateway_users_logged_in_total", "legendFormat": "Logged In", "refId": "C" },
+        { "expr": "gateway_users_login_failed_total", "legendFormat": "Failed Login", "refId": "D" }
+      ],
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 18 },
+      "id": 3
+    },
+    {
+      "type": "timeseries",
+      "title": "User Fetch Attempts",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_users_fetched_total", "legendFormat": "Fetched", "refId": "A" },
+        { "expr": "gateway_users_fetch_failed_total", "legendFormat": "Failed Fetch", "refId": "B" }
+      ],
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 18 },
+      "id": 4
+    },
+    {
+      "type": "timeseries",
+      "title": "Transactions",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_transactions_posted_total", "legendFormat": "Posted", "refId": "A" },
+        { "expr": "gateway_transactions_post_failed_total", "legendFormat": "Post Failed", "refId": "B" },
+        { "expr": "gateway_transactions_fetched_total", "legendFormat": "Fetched", "refId": "C" },
+        { "expr": "gateway_transactions_fetch_failed_total", "legendFormat": "Fetch Failed", "refId": "D" }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 27 },
+      "id": 5
+    },
+    {
+      "type": "timeseries",
+      "title": "Currency Conversion",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_convert_to_dkk_success_total", "legendFormat": "To DKK", "refId": "A" },
+        { "expr": "gateway_convert_to_dkk_failed_total", "legendFormat": "To DKK Failed", "refId": "B" },
+        { "expr": "gateway_convert_from_dkk_success_total", "legendFormat": "From DKK", "refId": "C" },
+        { "expr": "gateway_convert_from_dkk_failed_total", "legendFormat": "From DKK Failed", "refId": "D" }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 36 },
+      "id": 6
+    },
+    {
+      "type": "timeseries",
+      "title": "Exchange Rate",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_exchange_rate_gets_total", "legendFormat": "Gets", "refId": "A" },
+        { "expr": "gateway_exchange_rate_sets_total", "legendFormat": "Sets", "refId": "B" },
+        { "expr": "gateway_exchange_rate_set_fails_total", "legendFormat": "Set Fails", "refId": "C" }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 45 },
+      "id": 7
+    },
+    {
+      "type": "timeseries",
       "title": ".NET GC Heap Size",
       "datasource": "Prometheus",
       "targets": [
@@ -47,8 +109,8 @@
           "refId": "A"
         }
       ],
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 18 },
-      "id": 3
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 54 },
+      "id": 8
     },
     {
       "type": "timeseries",
@@ -61,8 +123,8 @@
           "refId": "A"
         }
       ],
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 27 },
-      "id": 4
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 63 },
+      "id": 9
     }
   ],
   "templating": { "list": [] },
