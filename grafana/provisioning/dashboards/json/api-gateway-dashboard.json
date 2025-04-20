@@ -125,6 +125,19 @@
       ],
       "gridPos": { "h": 9, "w": 24, "x": 0, "y": 63 },
       "id": 9
+    },
+    {
+      "type": "timeseries",
+      "title": "Recurring Transactions",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_recurring_posted_total", "legendFormat": "Posted", "refId": "A" },
+        { "expr": "gateway_recurring_post_failed_total", "legendFormat": "Post Failed", "refId": "B" },
+        { "expr": "gateway_recurring_fetched_total", "legendFormat": "Fetched", "refId": "C" },
+        { "expr": "gateway_recurring_fetch_failed_total", "legendFormat": "Fetch Failed", "refId": "D" }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 72 },
+      "id": 10
     }
   ],
   "templating": { "list": [] },
