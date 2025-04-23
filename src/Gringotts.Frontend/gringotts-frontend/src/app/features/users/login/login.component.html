@@ -14,6 +14,9 @@
     <h1>Gringotts Reception</h1>
     <input [(ngModel)]="username" placeholder="Key name" />
     <input [(ngModel)]="password" type="password" placeholder="Secret phrase" />
-    <button (click)="login()">Login</button>
+    <button class="login-button" (click)="login()">Login</button>
+    <button class="secondary-button" (click)="goToRegister()">
+      Register
+    </button>
   </div>
 </div>

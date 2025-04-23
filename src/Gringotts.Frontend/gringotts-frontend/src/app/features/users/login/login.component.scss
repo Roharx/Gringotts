@@ -16,6 +16,37 @@
   height: 100vh;
 }
 
+.login-button {
+  @extend %primary-button;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  /* subtle pulsing glow */
+  box-shadow: 0 0 8px rgba(184,157,89,0.6);
+  animation: pulseGlow 3s ease-in-out infinite;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+    );
+    transform: skewX(-20deg);
+  }
+
+  /* on hover, trigger the light sweep */
+  &:hover::before {
+    animation: lightSweep 1s forwards;
+  }
+}
+
 .candle-swarm {
   position: absolute;
   top: -60px;
@@ -32,6 +63,7 @@
   @extend %form-container;
   animation: fadeIn 1s ease-out;
   position: relative;
+  z-index: 1;
 }
 
 h1 {
@@ -42,7 +74,58 @@ input {
   @extend %input-field;
 }
 
+/* Primary login button */
 button {
   @extend %primary-button;
 }
 
+/* Magical secondary “Register” button */
+.secondary-button {
+  @extend %primary-button;
+  background: transparent;
+  color: #b89d59;
+  border: 2px solid #b89d59;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  transition: color 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from 0deg,
+        rgba(245, 215, 118, 0.2),
+        rgba(184, 157, 89, 0.2),
+        rgba(245, 215, 118, 0.2)
+    );
+    animation: rotateGlow 4s linear infinite;
+    z-index: -1;
+    opacity: 0.5;
+  }
+
+  &:hover {
+    color: #fff;
+
+    &::before {
+      animation-duration: 2s;
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes rotateGlow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lightSweep {
+  0%   { left: -120%; }
+  50%  { left: 120%; }
+  100% { left: 120%; }
+}

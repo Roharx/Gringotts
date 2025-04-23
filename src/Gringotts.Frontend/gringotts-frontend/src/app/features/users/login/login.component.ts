@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CandleComponent } from '../../../shared/candle/candle.component'; // your reusable candle
+import { RouterModule, Router } from '@angular/router';
+import { CandleComponent } from '../../../shared/candle/candle.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, CandleComponent], // ✅ correct placement
+  imports: [CommonModule, FormsModule, RouterModule, CandleComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
@@ -22,7 +23,13 @@ export class LoginComponent {
     flameDelay: `${Math.random() * 2}s`,
   }));
 
+  constructor(private router: Router) {}
+
   login() {
     console.log('Logging in with', this.username, this.password);
+  }
+
+  goToRegister() {
+    this.router.navigate(['/users/register']);
   }
 }
