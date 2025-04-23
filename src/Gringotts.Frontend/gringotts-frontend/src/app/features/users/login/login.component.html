@@ -1,0 +1,19 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <div class="candle-swarm">
+      <app-candle
+        *ngFor="let c of candles"
+        [height]="c.height"
+        [flameWidth]="c.flameWidth"
+        [flameHeight]="c.flameHeight"
+        [delay]="c.delay"
+        [flameDelay]="c.flameDelay"
+      ></app-candle>
+    </div>
+
+    <h1>Gringotts Reception</h1>
+    <input [(ngModel)]="username" placeholder="Key name" />
+    <input [(ngModel)]="password" type="password" placeholder="Secret phrase" />
+    <button (click)="login()">Login</button>
+  </div>
+</div>

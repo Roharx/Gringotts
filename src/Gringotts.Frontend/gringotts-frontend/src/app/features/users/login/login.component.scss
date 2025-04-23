@@ -1,0 +1,48 @@
+@use '../../../app.component.scss' as *;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 3rem;
+}
+
+.login-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.candle-swarm {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.login-container {
+  @extend %form-container;
+  animation: fadeIn 1s ease-out;
+  position: relative;
+}
+
+h1 {
+  @extend %glowing-header;
+}
+
+input {
+  @extend %input-field;
+}
+
+button {
+  @extend %primary-button;
+}
+

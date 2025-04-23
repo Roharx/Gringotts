@@ -1,0 +1,116 @@
+/* Shared containers and styles */
+
+%form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(20, 18, 15, 0.85);
+  border: 1px solid #b89d59;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(184, 157, 89, 0.4);
+  padding: 2rem;
+}
+
+%input-field {
+  background-color: #2c2c2c;
+  border: 1px solid #b89d59;
+  color: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 300px;
+  transition: box-shadow 0.3s ease;
+
+  &:focus {
+    box-shadow: 0 0 10px #b89d59;
+    outline: none;
+  }
+}
+
+%primary-button {
+  padding: 0.5rem 1rem;
+  background-color: #b89d59;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    background: linear-gradient(90deg, #f5d776, #b89d59, #f5d776);
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    z-index: -1;
+    transition: all 0.4s ease;
+  }
+
+  &:hover::before {
+    left: 0;
+  }
+}
+
+/* Shared entrance animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Magical header style */
+%glowing-header {
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px #b89d59, 0 0 10px #b89d59;
+  animation: subtleFlicker 10s infinite;
+}
+
+@keyframes subtleFlicker {
+  0%, 100% {
+    text-shadow: 0 0 5px #b89d59, 0 0 10px #b89d59;
+  }
+
+  10% {
+    text-shadow: 0 0 6px #fff4a3, 0 0 12px #f5d776;
+  }
+
+  11% {
+    text-shadow: 0 0 3px #b89d59, 0 0 6px #b89d59;
+  }
+
+  12% {
+    text-shadow: 0 0 7px #f5d776, 0 0 13px #fff4a3;
+  }
+
+  13% {
+    text-shadow: 0 0 5px #b89d59, 0 0 10px #b89d59;
+  }
+
+  55% {
+    text-shadow: 0 0 6px #fff4a3, 0 0 12px #f5d776;
+  }
+
+  56% {
+    text-shadow: 0 0 4px #b89d59, 0 0 7px #b89d59;
+  }
+
+  57% {
+    text-shadow: 0 0 8px #f5d776, 0 0 14px #fff4a3;
+  }
+
+  58% {
+    text-shadow: 0 0 5px #b89d59, 0 0 10px #b89d59;
+  }
+}

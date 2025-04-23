@@ -1,0 +1,107 @@
+@use '../../../app.component.scss' as *;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.register-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  height: 100vh;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scattered-candles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+
+  app-candle {
+    pointer-events: auto;
+  }
+}
+
+.book-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.book {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  background: #3a2b1a;
+  border: 3px solid #b89d59;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(184,157,89,0.4);
+}
+
+.pages {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.page {
+  flex: 1;
+  background: #f9f2e2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 10%;
+}
+
+.left-page {
+  border-right: 1px solid #b89d59;
+}
+
+/* ✨ Line drawing animation */
+.line {
+  width: 0%;
+  height: 2px;
+  background: #b89d59;
+  margin: 0.4rem 0;
+  transform-origin: left;
+  animation: drawLine 1s ease-out forwards;
+  animation-delay: calc(var(--line-index) * 0.5s);
+}
+
+@keyframes drawLine {
+  0% { width: 0%; }
+  100% { width: 80%; }
+}
+
+/* 🔏 Registration form styling */
+.register-container {
+  @extend %form-container;
+  animation: fadeIn 1s ease-out;
+  position: relative;
+  z-index: 3;
+}
+
+h1 {
+  @extend %glowing-header;
+}
+
+input {
+  @extend %input-field;
+}
+
+button {
+  @extend %primary-button;
+}

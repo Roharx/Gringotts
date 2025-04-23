@@ -1,0 +1,37 @@
+<div class="register-wrapper">
+  <div class="scattered-candles">
+    <app-candle
+      *ngFor="let c of candles"
+      [height]="c.height"
+      [flameWidth]="c.flameWidth"
+      [flameHeight]="c.flameHeight"
+      [delay]="c.delay"
+      [flameDelay]="c.flameDelay"
+      [style.position]="'absolute'"
+      [style.left.px]="c.initialX"
+      [style.top.px]="c.initialY"
+    ></app-candle>
+  </div>
+
+  <div class="book-container">
+    <div class="book">
+      <div class="pages">
+        <div class="page left-page">
+          <div class="line" *ngFor="let i of [0,1,2,3]" [style.--line-index]="i"></div>
+        </div>
+        <div class="page right-page">
+          <div class="line" *ngFor="let i of [4,5,6,7]" [style.--line-index]="i"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="register-container">
+    <h1>Register</h1>
+    <input [(ngModel)]="username" placeholder="Key name" />
+    <input [(ngModel)]="email" placeholder="Owl post address" />
+    <input [(ngModel)]="displayName" placeholder="Wizard name" />
+    <input [(ngModel)]="password" type="password" placeholder="Secret phrase" />
+    <button (click)="register()">Register</button>
+  </div>
+</div>
