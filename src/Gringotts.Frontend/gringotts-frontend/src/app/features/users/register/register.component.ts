@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CandleComponent } from '../../../shared/candle/candle.component';
+import { Location } from '@angular/common';
+import { CandleComponent } from '../../../shared/styling/candle/candle.component';
+import { SweepButtonComponent } from '../../../shared/styling/sweep-button/sweep-button.component';
 
 type Candle = {
   height: string;
@@ -16,7 +18,12 @@ type Candle = {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, CandleComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CandleComponent,
+    SweepButtonComponent
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
@@ -27,6 +34,8 @@ export class RegisterComponent implements OnInit {
   password = '';
 
   candles: Candle[] = [];
+
+  constructor(private location: Location) {}
 
   ngOnInit(): void {
     // Define the “no-candles” zone around the form (in vh/vw)
@@ -60,6 +69,11 @@ export class RegisterComponent implements OnInit {
         initialY,
       });
     }
+  }
+
+  /** Called when the user clicks the ‹ Go Back button */
+  goBack(): void {
+    this.location.back();
   }
 
   register() {

@@ -7,17 +7,17 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'dashboard',
-    loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then(
-        (m) => m.DashboardComponent
-      ),
-  },
-  {
     path: 'transactions',
     loadComponent: () =>
       import('./features/transactions/transactions.component').then(
         (m) => m.TransactionsComponent
+      ),
+  },
+  {
+    path: 'vaults',
+    loadComponent: () =>
+      import('./features/dashboard/vaults/vaults.component').then(
+        (m) => m.VaultsComponent
       ),
   },
   {

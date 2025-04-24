@@ -27,11 +27,12 @@
   </div>
 
   <div class="register-container">
+    <button class="go-back" (click)="goBack()">‹</button>
     <h1>Register</h1>
     <input [(ngModel)]="username" placeholder="Key name" />
     <input [(ngModel)]="email" placeholder="Owl post address" />
     <input [(ngModel)]="displayName" placeholder="Wizard name" />
     <input [(ngModel)]="password" type="password" placeholder="Secret phrase" />
-    <button (click)="register()">Register</button>
+    <app-sweep-button (clicked)="register()">Register</app-sweep-button>
   </div>
 </div>

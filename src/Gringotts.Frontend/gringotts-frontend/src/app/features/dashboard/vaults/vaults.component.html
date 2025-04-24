@@ -1,0 +1,36 @@
+<div class="vaults-wrapper">
+  <!-- Logout button fixed top-left -->
+  <button class="logout-button" (click)="logout()">Leave Vault</button>
+  <!-- Key name fixed top-right -->
+  <div class="key-name">{{ keyName }}</div>
+  <div class="candle-swarm">
+    <app-candle
+      *ngFor="let c of candles"
+      [height]="c.height"
+      [flameWidth]="c.flameWidth"
+      [flameHeight]="c.flameHeight"
+      [delay]="c.delay"
+      [flameDelay]="c.flameDelay"
+    ></app-candle>
+  </div>
+
+  <h1>Gringotts Vault</h1>
+  <div class="nav-buttons">
+    <app-sweep-button (clicked)="goToAccount()">Key Details</app-sweep-button>
+    <app-sweep-button (clicked)="goToConversion()">Conversion</app-sweep-button>
+  </div>
+
+  <div class="vault-list">
+    <div
+      class="vault-card"
+      *ngFor="let v of vaults"
+      (click)="selectVault(v)"
+    >
+      <div class="icon">{{ v.icon }}</div>
+      <div class="details">
+        <div class="label">{{ v.label }}</div>
+        <div class="amount">{{ v.amount | number }} {{ v.currency }}</div>
+      </div>
+    </div>
+  </div>
+</div>

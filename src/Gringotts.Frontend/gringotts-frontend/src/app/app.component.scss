@@ -37,6 +37,7 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  user-select: none;
   z-index: 0;
 
   &::before {
@@ -75,6 +76,8 @@
   letter-spacing: 2px;
   text-shadow: 0 0 5px #b89d59, 0 0 10px #b89d59;
   animation: subtleFlicker 10s infinite;
+  cursor: default;
+  user-select: none;
 }
 
 @keyframes subtleFlicker {

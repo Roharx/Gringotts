@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { CandleComponent } from '../../../shared/candle/candle.component';
+import { CandleComponent } from '../../../shared/styling/candle/candle.component';
+import {SweepButtonComponent} from '../../../shared/styling/sweep-button/sweep-button.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, CandleComponent],
+  imports: [CommonModule, FormsModule, RouterModule, CandleComponent, SweepButtonComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
