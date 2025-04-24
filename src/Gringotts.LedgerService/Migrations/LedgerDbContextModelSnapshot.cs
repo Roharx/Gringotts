@@ -22,6 +22,38 @@ namespace Gringotts.LedgerService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Gringotts.Shared.Models.CurrencyService.Balance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("DkkAmount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<int>("Galleons")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Knuts")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sickles")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Balances");
+                });
+
             modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.ExchangeRate", b =>
                 {
                     b.Property<Guid>("Id")
