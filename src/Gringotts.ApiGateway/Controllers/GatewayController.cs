@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
-using Gringotts.Shared.Models;
 using Gringotts.Shared.Models.ApiGateway;
 using Gringotts.Shared.Models.CurrencyService;
 using Gringotts.Shared.Models.LedgerService;
 using Gringotts.Shared.Models.LedgerService.TransactionService;
 using Gringotts.Shared.Models.LedgerService.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prometheus;
 
@@ -12,11 +12,13 @@ namespace Gringotts.ApiGateway.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class GatewayController : ControllerBase
 {
     private static readonly ActivitySource ActivitySource = new("ApiGateway.GatewayController");
 
-    // Prometheus Counters
+    #region Prometheus
+    
     private static readonly Counter ConvertToDkkSuccess =
         Metrics.CreateCounter("gateway_convert_to_dkk_success_total", "Successful ConvertToDkk calls");
 
@@ -79,7 +81,8 @@ public class GatewayController : ControllerBase
 
     private static readonly Counter RecurringPostFailed =
         Metrics.CreateCounter("gateway_recurring_post_failed_total", "Failed recurring transaction post attempts");
-
+    
+    #endregion
 
     private readonly HttpClient _http;
 
@@ -87,7 +90,7 @@ public class GatewayController : ControllerBase
     {
         _http = factory.CreateClient();
     }
-
+    [AllowAnonymous]
     [HttpPost("users/register")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterRequest request)
     {
@@ -104,7 +107,7 @@ public class GatewayController : ControllerBase
         UsersRegistered.Inc();
         return Ok(await response.Content.ReadFromJsonAsync<object>());
     }
-
+    [AllowAnonymous]
     [HttpPost("users/login")]
     public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
     {
