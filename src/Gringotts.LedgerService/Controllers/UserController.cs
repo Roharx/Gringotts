@@ -29,11 +29,13 @@ public class UsersController : ControllerBase
 
     private readonly LedgerDbContext _context;
     private readonly IPasswordHasher _hasher;
+    private readonly ITokenService _tokenService;
 
-    public UsersController(LedgerDbContext context, IPasswordHasher hasher)
+    public UsersController(LedgerDbContext context, IPasswordHasher hasher, ITokenService tokenService)
     {
         _context = context;
         _hasher = hasher;
+        _tokenService = tokenService;
     }
 
     [HttpPost("register")]
@@ -74,7 +76,8 @@ public class UsersController : ControllerBase
             return Unauthorized("Invalid credentials.");
         }
 
-        return Ok(new { user.Id, user.Username, user.Email, user.DisplayName });
+        var token = _tokenService.CreateToken(user);
+        return Ok(new { token });
     }
 
     [HttpGet("{id:guid}")]

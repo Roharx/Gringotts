@@ -21,8 +21,19 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'account-details',
+    loadComponent: () =>
+      import('./features/dashboard/account-details/account-details.component').then(
+        (m) => m.AccountDetailsComponent
+      ),
+  },
+  {
     path: 'users',
     loadChildren: () =>
       import('./features/users/users.routes').then((m) => m.USER_ROUTES),
+  },
+  {
+    path: '**',
+    redirectTo: 'users/login',
   },
 ];

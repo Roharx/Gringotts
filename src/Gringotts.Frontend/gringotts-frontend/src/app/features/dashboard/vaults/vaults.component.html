@@ -1,8 +1,9 @@
 <div class="vaults-wrapper">
-  <!-- Logout button fixed top-left -->
+  <!-- Logout and Key Name -->
   <button class="logout-button" (click)="logout()">Leave Vault</button>
-  <!-- Key name fixed top-right -->
   <div class="key-name">{{ keyName }}</div>
+
+  <!-- Candle swarm -->
   <div class="candle-swarm">
     <app-candle
       *ngFor="let c of candles"
@@ -15,22 +16,34 @@
   </div>
 
   <h1>Gringotts Vault</h1>
+
+  <!-- Nav: Key Details & Transfer -->
   <div class="nav-buttons">
     <app-sweep-button (clicked)="goToAccount()">Key Details</app-sweep-button>
-    <app-sweep-button (clicked)="goToConversion()">Conversion</app-sweep-button>
+    <app-sweep-button (clicked)="goToTransfer()">Transfer Coins</app-sweep-button>
   </div>
 
+  <!-- Vault cards with Convert button -->
   <div class="vault-list">
-    <div
-      class="vault-card"
-      *ngFor="let v of vaults"
-      (click)="selectVault(v)"
-    >
+    <div class="vault-card" *ngFor="let v of vaults">
       <div class="icon">{{ v.icon }}</div>
       <div class="details">
         <div class="label">{{ v.label }}</div>
         <div class="amount">{{ v.amount | number }} {{ v.currency }}</div>
       </div>
+      <app-sweep-button
+        class="convert-button"
+        (clicked)="openConversion(v)"
+      >
+        Convert
+      </app-sweep-button>
     </div>
   </div>
+
+  <!-- Conversion Modal -->
+  <app-conversion-modal
+    *ngIf="conversionVault"
+    [vault]="conversionVault"
+    (close)="closeConversion()"
+  ></app-conversion-modal>
 </div>

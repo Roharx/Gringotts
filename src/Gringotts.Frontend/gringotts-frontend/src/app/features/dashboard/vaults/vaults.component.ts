@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CandleComponent } from '../../../shared/styling/candle/candle.component';
 import { SweepButtonComponent } from '../../../shared/styling/sweep-button/sweep-button.component';
+import { ConversionModalComponent } from '../modals/conversion-modal/conversion-modal.component';
 
 interface Vault {
   label: string;
@@ -14,15 +15,13 @@ interface Vault {
 @Component({
   selector: 'app-vaults',
   standalone: true,
-  imports: [CommonModule, CandleComponent, SweepButtonComponent],
+  imports: [CommonModule, CandleComponent, SweepButtonComponent, ConversionModalComponent],
   templateUrl: './vaults.component.html',
   styleUrls: ['./vaults.component.scss'],
 })
 export class VaultsComponent {
-  // Display the current user's key name (replace with real data)
-  keyName = 'Key Name';
+  keyName = 'YourKeyName';
 
-  // Decorative candles at top
   candles = Array.from({ length: 5 }).map(() => ({
     height: `${40 + Math.random() * 20}px`,
     flameWidth: `${10 + Math.random() * 5}px`,
@@ -31,35 +30,30 @@ export class VaultsComponent {
     flameDelay: `${Math.random() * 2}s`,
   }));
 
-  // Vault balances
   vaults: Vault[] = [
-    { label: 'Galleons',       amount: 1250, currency: 'Galleons',    icon: '🟡' },
-    { label: 'Sickles',        amount: 540,  currency: 'Sickles',     icon: '⚪️' },
-    { label: 'Knuts',          amount: 7200, currency: 'Knuts',       icon: '🟤' },
-    { label: 'Muggle Money',   amount: 3000, currency: 'DKK',         icon: '💳' }
+    { label: 'Galleons',     amount: 1250, currency: 'Galleons',  icon: '🟡' },
+    { label: 'Sickles',      amount: 540,  currency: 'Sickles',   icon: '⚪️' },
+    { label: 'Knuts',        amount: 7200, currency: 'Knuts',     icon: '🟤' },
+    { label: 'Muggle Money', amount: 3000, currency: 'DKK',       icon: '💳' }
   ];
+
+  conversionVault: Vault | null = null;
 
   constructor(private router: Router) {}
 
-  /** Log the user out */
-  logout() {
-    // adjust path if needed
-    this.router.navigate(['/users/login']);
+  logout() { this.router.navigate(['/users/login']); }
+  goToAccount() { this.router.navigate(['/account-details']); }
+  goToTransfer() { this.router.navigate(['/transfer']); }
+
+  openConversion(v: Vault) {
+    this.conversionVault = v;
   }
 
-  /** Navigate to account details */
-  goToAccount() {
-    this.router.navigate(['/account-details']);
+  closeConversion() {
+    this.conversionVault = null;
   }
 
-  /** Navigate to conversion tool */
-  goToConversion() {
-    this.router.navigate(['/convert']);
-  }
-
-  /** Handle vault card click */
   selectVault(v: Vault) {
     console.log('Vault selected:', v);
-    // e.g. this.router.navigate(['/vaults', v.id]);
   }
 }

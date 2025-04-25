@@ -51,7 +51,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 // Program.cs (before builder.Build())
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

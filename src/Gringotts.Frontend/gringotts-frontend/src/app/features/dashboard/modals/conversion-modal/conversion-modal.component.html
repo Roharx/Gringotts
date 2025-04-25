@@ -1,0 +1,31 @@
+<div class="modal-overlay" (click)="onClose()"></div>
+<div class="conversion-modal">
+  <div class="modal-content">
+    <button class="close-btn" (click)="onClose()">×</button>
+    <h2>Convert {{ vault.label }}</h2>
+
+    <div class="form-group">
+      <label>Amount</label>
+      <input
+        type="number"
+        [(ngModel)]="amount"
+        (focus)="selectAll($event)"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>To</label>
+      <div class="select-wrapper">
+        <select [(ngModel)]="target">
+          <option *ngFor="let c of targetOptions">{{ c }}</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="sweep" (click)="doConvert()">Convert</button>
+
+    <p *ngIf="result !== null">
+      Result: {{ result | number:'1.0-2' }} {{ target }}
+    </p>
+  </div>
+</div>

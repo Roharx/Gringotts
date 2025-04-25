@@ -76,6 +76,10 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
+.convert-button {
+  margin-top: 0.5rem;
+}
+
 .vault-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -115,6 +119,25 @@ h1 {
   }
   .amount {
     font-size: 0.9rem;
+  }
+}
+
+.transact-button {
+  margin-top: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  align-self: center;
+  /* stop the click on the button from bubbling up to the card */
+  pointer-events: auto;
+}
+
+/* And ensure the vault-card doesn’t capture clicks on the button */
+.vault-card {
+  position: relative;
+
+  app-sweep-button.transact-button {
+    position: relative;
+    z-index: 2;
   }
 }
 
