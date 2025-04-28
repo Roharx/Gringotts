@@ -111,6 +111,6 @@ app.UseHttpMetrics();
 
 app.MapControllers();
 
-app.Run("http://0.0.0.0:8080");
+app.Run();
 
 public partial class Program { }
