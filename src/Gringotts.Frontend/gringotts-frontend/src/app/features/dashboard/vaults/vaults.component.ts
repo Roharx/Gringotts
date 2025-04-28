@@ -158,11 +158,10 @@ export class VaultsComponent implements OnInit {
     recurring: true,
     exchange: true
   };
-
   toggleFeature(feature: string) {
     const enabled = this.adminFeatureToggles[feature];
 
-    this.api.post<any>(`gateway/admin/toggle-feature?feature=${feature}&enabled=${enabled}`, {})
+    this.api.post<any>(`admin/toggle-feature?feature=${feature}&enabled=${enabled}`, {})
       .subscribe({
         next: () => {
           alert(`Feature '${feature}' has been ${enabled ? 'enabled' : 'disabled'}.`);
@@ -173,7 +172,6 @@ export class VaultsComponent implements OnInit {
         }
       });
   }
-
   adminFeatureToggleKeys() {
     return Object.keys(this.adminFeatureToggles);
   }
