@@ -29,6 +29,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -114,6 +115,6 @@ app.UseHttpMetrics();
 
 app.MapControllers();
 
-app.Run();
+app.Run("http://0.0.0.0:8080");
 
 public partial class Program { }
