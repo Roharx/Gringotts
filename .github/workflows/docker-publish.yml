@@ -2,8 +2,7 @@
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 env:
   DOCKERHUB_NAMESPACE: roharx
@@ -15,39 +14,33 @@ jobs:
     strategy:
       matrix:
         include:
+          - name: migrations
+            context: src/Gringotts.Migration
+            dockerfile: Dockerfile
           - name: apigateway
             context: .
             dockerfile: src/Gringotts.ApiGateway/Dockerfile
-
           - name: transactionpublisher
             context: .
             dockerfile: src/Gringotts.TransactionPublisher/Dockerfile
-
           - name: transactionconsumer
             context: .
             dockerfile: src/Gringotts.TransactionConsumer/Dockerfile
-
           - name: currencyservice
             context: .
             dockerfile: src/Gringotts.CurrencyService/Dockerfile
-
           - name: ledgerservice
             context: .
             dockerfile: src/Gringotts.LedgerService/Dockerfile
-
-          - name: migrations
-            context: src/Gringotts.Migration
-            dockerfile: src/Gringotts.Migration/Dockerfile
-
           - name: frontend
-            context: ./src/Gringotts.Frontend/gringotts-frontend
+            context: src/Gringotts.Frontend/gringotts-frontend
             dockerfile: Dockerfile
 
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
+      - name: Set up QEMU (for multi-arch)
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
@@ -63,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.context }}
-          file: ${{ matrix.file || format('{0}/{1}', matrix.context, matrix.dockerfile) }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           push: true
           tags: |
             ${{ env.DOCKERHUB_NAMESPACE }}/gringotts-${{ matrix.name }}:latest
