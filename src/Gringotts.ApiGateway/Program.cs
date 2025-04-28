@@ -22,12 +22,13 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://161.97.92.174",  "http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
 });
 
 builder.Services.AddAuthentication(options =>
@@ -99,16 +100,16 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.UseCors();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseMetricServer();
 app.UseHttpMetrics();
