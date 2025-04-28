@@ -12,7 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL","pg_isready -U gringotts"]
+      test: ["CMD-SHELL", "pg_isready -U gringotts"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,13 +23,17 @@ services:
       - "5672:5672"
       - "15672:15672"
     healthcheck:
-      test: ["CMD","curl","-f","http://localhost:15672/api/overview"]
+      test: ["CMD", "curl", "-f", "http://localhost:15672/api/overview"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   migrations:
     image: roharx/gringotts-migration:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      dotnet Gringotts.Migration.dll
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -38,15 +42,17 @@ services:
       - POSTGRES_DB=gringotts
     depends_on:
       - db
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        ./wait-for-it.sh db:5432 -- echo 'DB is ready' \
-        && dotnet Gringotts.Migration.dll
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
 
   transactionpublisher:
     image: roharx/gringotts-transactionpublisher:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      ./wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      dotnet Gringotts.TransactionPublisher.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitmq
@@ -58,6 +64,11 @@ services:
 
   transactionconsumer:
     image: roharx/gringotts-transactionconsumer:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      ./wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      dotnet Gringotts.TransactionConsumer.dll
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -74,6 +85,10 @@ services:
 
   currencyservice:
     image: roharx/gringotts-currencyservice:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      dotnet Gringotts.CurrencyService.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DB_HOST=db
@@ -88,6 +103,10 @@ services:
 
   ledgerservice:
     image: roharx/gringotts-ledgerservice:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      dotnet Gringotts.LedgerService.dll
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -101,6 +120,11 @@ services:
 
   apigateway:
     image: roharx/gringotts-apigateway:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      ./wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      dotnet Gringotts.ApiGateway.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DB_HOST=db
@@ -125,10 +149,10 @@ services:
 
   frontend:
     image: roharx/gringotts-frontend:latest
-    ports:
-      - "8100:80"
     depends_on:
       - apigateway
+    ports:
+      - "8100:80"
 
   prometheus:
     image: prom/prometheus:latest
@@ -137,12 +161,6 @@ services:
       - ./prometheus/rules.yml:/etc/prometheus/rules.yml:ro
     ports:
       - "9090:9090"
-    depends_on:
-      - transactionpublisher
-      - ledgerservice
-      - apigateway
-      - transactionconsumer
-      - currencyservice
 
   jaeger:
     image: jaegertracing/all-in-one:1.49.0
@@ -160,25 +178,12 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=yourpassword
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning
-      - ./grafana/provisioning/dashboards/json:/etc/grafana/provisioning/dashboards/json
-    depends_on:
-      - prometheus
-      - jaeger
 
   watchtower:
     image: containrrr/watchtower:latest
-    container_name: watchtower
-    restart: unless-stopped
+    command: --interval 300 --swarm --cleanup
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_POLL_INTERVAL=300
-    command: --interval 300
 
 volumes:
   pgdata:
