@@ -107,6 +107,9 @@ public class GatewayController : ControllerBase
     [HttpPost("users/register")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterRequest request)
     {
+        if (!FeatureToggles.IsRegisterEnabled)
+            return StatusCode(503, "Registration service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("RegisterUser", ActivityKind.Server);
 
         // Create the user
@@ -146,6 +149,9 @@ public class GatewayController : ControllerBase
     [HttpPost("users/login")]
     public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
     {
+        if (!FeatureToggles.IsLoginEnabled)
+            return StatusCode(503, "Login service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("LoginUser", ActivityKind.Server);
         var response = await _http.PostAsJsonAsync($"{ApiEndpoints.LedgerServiceUser}/login", request);
         if (!response.IsSuccessStatusCode)
@@ -210,6 +216,9 @@ public class GatewayController : ControllerBase
     [HttpPost("convert-to-dkk")]
     public async Task<ActionResult<decimal>> ConvertToDkk([FromBody] Money money)
     {
+        if (!FeatureToggles.IsConversionEnabled)
+            return StatusCode(503, "Conversion service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("ConvertToDkk", ActivityKind.Server);
         var response = await _http.PostAsJsonAsync($"{ApiEndpoints.CurrencyServiceBase}/convert-to-dkk", money);
         if (!response.IsSuccessStatusCode)
@@ -228,6 +237,9 @@ public class GatewayController : ControllerBase
     [HttpPost("convert-from-dkk")]
     public async Task<ActionResult<Money>> ConvertFromDkk([FromBody] decimal dkk)
     {
+        if (!FeatureToggles.IsConversionEnabled)
+            return StatusCode(503, "Conversion service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("ConvertFromDkk", ActivityKind.Server);
         var response = await _http.PostAsJsonAsync($"{ApiEndpoints.CurrencyServiceBase}/convert-from-dkk", dkk);
         if (!response.IsSuccessStatusCode)
@@ -246,6 +258,9 @@ public class GatewayController : ControllerBase
     [HttpGet("exchange-rate")]
     public async Task<ActionResult<ExchangeRate>> GetExchangeRate()
     {
+        if (!FeatureToggles.IsExchangeRateEnabled)
+            return StatusCode(503, "Exchange service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("GetExchangeRate", ActivityKind.Server);
         var response = await _http.GetAsync($"{ApiEndpoints.CurrencyServiceBase}/exchange-rate");
         if (!response.IsSuccessStatusCode)
@@ -263,6 +278,9 @@ public class GatewayController : ControllerBase
     [HttpPost("exchange-rate")]
     public async Task<ActionResult<ExchangeRate>> SetExchangeRate([FromBody] ExchangeRate rate)
     {
+        if (!FeatureToggles.IsExchangeRateEnabled)
+            return StatusCode(503, "Exchange service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("SetExchangeRate", ActivityKind.Server);
         var response = await _http.PostAsJsonAsync($"{ApiEndpoints.CurrencyServiceBase}/exchange-rate", rate);
         if (!response.IsSuccessStatusCode)
@@ -279,6 +297,9 @@ public class GatewayController : ControllerBase
     [HttpGet("transactions")]
     public async Task<ActionResult<List<Transaction>>> GetTransactions()
     {
+        if (!FeatureToggles.IsTransactionEnabled)
+            return StatusCode(503, "Transaction service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("GetTransactions", ActivityKind.Server);
         var response = await _http.GetAsync(ApiEndpoints.LedgerServiceBase);
         if (!response.IsSuccessStatusCode)
@@ -297,6 +318,9 @@ public class GatewayController : ControllerBase
     [HttpPost("transactions")]
     public async Task<ActionResult<Transaction>> AddTransaction([FromBody] Transaction transaction)
     {
+        if (!FeatureToggles.IsTransactionEnabled)
+            return StatusCode(503, "Transaction service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("AddTransaction", ActivityKind.Server);
 
         // Record the transaction
@@ -335,6 +359,9 @@ public class GatewayController : ControllerBase
     [HttpGet("recurring-transactions")]
     public async Task<ActionResult<List<RecurringTransaction>>> GetRecurringTransactions()
     {
+        if (!FeatureToggles.IsRecurringEnabled)
+            return StatusCode(503, "Recurring Transaction service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("GetRecurringTransactions", ActivityKind.Server);
         var response = await _http.GetAsync(ApiEndpoints.LedgerServiceRecurring);
         if (!response.IsSuccessStatusCode)
@@ -353,6 +380,9 @@ public class GatewayController : ControllerBase
     [HttpGet("recurring-transactions/{id:guid}")]
     public async Task<ActionResult<RecurringTransaction>> GetRecurringTransactionById(Guid id)
     {
+        if (!FeatureToggles.IsRecurringEnabled)
+            return StatusCode(503, "Recurring Transaction service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("GetRecurringTransactionById", ActivityKind.Server);
         var response = await _http.GetAsync($"{ApiEndpoints.LedgerServiceRecurring}/{id}");
         if (!response.IsSuccessStatusCode)
@@ -370,6 +400,9 @@ public class GatewayController : ControllerBase
     public async Task<ActionResult<RecurringTransaction>> AddRecurringTransaction(
         [FromBody] RecurringTransaction transaction)
     {
+        if (!FeatureToggles.IsRecurringEnabled)
+            return StatusCode(503, "Recurring Transaction service is disabled.");
+        
         using var activity = ActivitySource.StartActivity("AddRecurringTransaction", ActivityKind.Server);
         var response = await _http.PostAsJsonAsync(ApiEndpoints.LedgerServiceRecurring, transaction);
         if (!response.IsSuccessStatusCode)
@@ -402,5 +435,38 @@ public class GatewayController : ControllerBase
         var result = await response.Content.ReadFromJsonAsync<object>();
         activity?.SetTag("balance.userId", userId);
         return Ok(result);
+    }
+    
+    [HttpPost("admin/toggle-feature")]
+    [Authorize]
+    public IActionResult ToggleFeature([FromQuery] string feature, [FromQuery] bool enabled)
+    {
+        feature = feature?.Trim().ToLower();
+    
+        switch (feature)
+        {
+            case "login":
+                FeatureToggles.IsLoginEnabled = enabled;
+                break;
+            case "register":
+                FeatureToggles.IsRegisterEnabled = enabled;
+                break;
+            case "transaction":
+                FeatureToggles.IsTransactionEnabled = enabled;
+                break;
+            case "conversion":
+                FeatureToggles.IsConversionEnabled = enabled;
+                break;
+            case "recurring":
+                FeatureToggles.IsRecurringEnabled = enabled;
+                break;
+            case "exchange":
+                FeatureToggles.IsExchangeRateEnabled = enabled;
+                break;
+            default:
+                return BadRequest(new { error = "Unknown feature." });
+        }
+
+        return Ok(new { message = $"Feature '{feature}' set to {enabled}." });
     }
 }

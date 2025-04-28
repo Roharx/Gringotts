@@ -6,6 +6,7 @@ import { SweepButtonComponent } from '../../../shared/styling/sweep-button/sweep
 import { ConversionModalComponent } from '../modals/conversion-modal/conversion-modal.component';
 import { ApiService } from '../../../shared/services/api.service';
 import { TokenService } from '../../../shared/services/token.service';
+import { FormsModule } from '@angular/forms';
 
 interface Vault {
   label:    string;
@@ -30,6 +31,7 @@ interface Balance {
   imports: [
     CommonModule,
     CandleComponent,
+    FormsModule,
     SweepButtonComponent,
     ConversionModalComponent
   ],
@@ -146,5 +148,32 @@ export class VaultsComponent implements OnInit {
         alert('Failed to add money.');
       }
     });
+  }
+
+  adminFeatureToggles = {
+    login: true,
+    register: true,
+    transaction: true,
+    conversion: true,
+    recurring: true,
+    exchange: true
+  };
+
+  toggleFeature(feature: string) {
+    const enabled = this.adminFeatureToggles[feature];
+
+    this.api.post<any>(`gateway/admin/toggle-feature?feature=${feature}&enabled=${enabled}`, {})
+      .subscribe({
+        next: () => {
+          alert(`Feature '${feature}' has been ${enabled ? 'enabled' : 'disabled'}.`);
+        },
+        error: (err) => {
+          console.error('Failed to toggle feature', err);
+          alert('Failed to toggle feature.');
+        }
+      });
+  }
+  adminFeatureToggleKeys() {
+    return Object.keys(this.adminFeatureToggles);
   }
 }
