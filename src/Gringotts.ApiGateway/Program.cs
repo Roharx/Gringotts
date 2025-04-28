@@ -39,6 +39,17 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -109,6 +120,7 @@ var app = builder.Build();
 app.UseRouting();
 
 app.UseCors("AllowFrontend");
+app.UseCors("AllowAnyOrigin");
 
 app.UseSwagger();
 app.UseSwaggerUI();
