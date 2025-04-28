@@ -1,0 +1,150 @@
+﻿version: "3.8"
+
+services:
+  db:
+    image: postgres:14-alpine
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:15672/api/overview"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    image: roharx/gringotts-deployment:migrations-latest
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: [ "/bin/sh", "-c", "./wait-for-it.sh db:5432 -- echo 'DB is ready' && dotnet Gringotts.Migration.dll" ]
+
+  transactionpublisher:
+    image: roharx/gringotts-deployment:transactionpublisher-latest
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5003:8080"
+
+  transactionconsumer:
+    image: roharx/gringotts-deployment:transactionconsumer-latest
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - rabbitmq
+    ports:
+      - "5004:8080"
+
+  currencyservice:
+    image: roharx/gringotts-deployment:currencyservice-latest
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+    ports:
+      - "5001:8080"
+
+  ledgerservice:
+    image: roharx/gringotts-deployment:ledgerservice-latest
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - "5002:8080"
+
+  apigateway:
+    image: roharx/gringotts-deployment:apigateway-latest
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - currencyservice
+      - ledgerservice
+      - transactionpublisher
+      - transactionconsumer
+    ports:
+      - "5000:8080"
+
+  frontend:
+    image: roharx/gringotts-deployment:frontend-latest
+    ports:
+      - "8100:80"
+    depends_on:
+      apigateway:
+        condition: service_started
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules.yml:/etc/prometheus/rules.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - transactionpublisher
+      - ledgerservice
+      - apigateway
+      - transactionconsumer
+      - currencyservice
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.49.0
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning/dashboards/json:/etc/grafana/provisioning/dashboards/json
+    depends_on:
+      - prometheus
+      - jaeger
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=300
+    command: --interval 300
+
+volumes:
+  pgdata:
