@@ -28,6 +28,12 @@
   }
 }
 
+%error-message {
+  color: #f35;
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
 %primary-button {
   padding: 0.5rem 1rem;
   background-color: #b89d59;

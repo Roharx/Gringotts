@@ -16,6 +16,10 @@
   height: 100vh;
 }
 
+.error-message {
+  @extend %error-message;
+}
+
 .login-button {
   @extend %primary-button;
   position: relative;

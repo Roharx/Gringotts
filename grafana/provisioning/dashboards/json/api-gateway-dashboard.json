@@ -100,6 +100,17 @@
     },
     {
       "type": "timeseries",
+      "title": "Balance Requests",
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "gateway_balances_fetched_total", "legendFormat": "Fetched", "refId": "A" },
+        { "expr": "gateway_balances_fetch_failed_total", "legendFormat": "Fetch Failed", "refId": "B" }
+      ],
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 81 },
+      "id": 11
+    },
+    {
+      "type": "timeseries",
       "title": ".NET GC Heap Size",
       "datasource": "Prometheus",
       "targets": [

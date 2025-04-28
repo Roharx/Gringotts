@@ -14,16 +14,16 @@ namespace Gringotts.Shared.Models.CurrencyService
 
         [Required]
         [Column(TypeName = "numeric(18,2)")]
-        public decimal DkkAmount { get; set; }
+        public decimal DkkAmount { get; set; } = 0m;
 
         [Required]
-        public int Galleons { get; set; }
+        public int Galleons { get; set; } = 0;
 
         [Required]
-        public int Sickles { get; set; }
+        public int Sickles { get; set; } = 0;
 
         [Required]
-        public int Knuts { get; set; }
+        public int Knuts { get; set; } = 0;
 
         [Required]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -12,8 +12,14 @@
     </div>
 
     <h1>Gringotts Reception</h1>
+
     <input [(ngModel)]="username" placeholder="Key name" />
     <input [(ngModel)]="password" type="password" placeholder="Secret phrase" />
+
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
     <app-sweep-button (clicked)="login()">Enter Vault</app-sweep-button>
     <button class="secondary-button" (click)="goToRegister()">
       Register
