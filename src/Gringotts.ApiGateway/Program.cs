@@ -37,16 +37,14 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAnyOrigin", policy =>
+    
+    options.AddPolicy("AllowAll", policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .SetIsOriginAllowed(origin => true)
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -119,8 +117,7 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.UseCors("AllowFrontend");
-app.UseCors("AllowAnyOrigin");
+app.UseCors("AllowAll");
 
 app.UseSwagger();
 app.UseSwaggerUI();
