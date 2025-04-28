@@ -16,32 +16,21 @@ var jwtKey = builder.Configuration["Jwt:Key"] ?? "lyowRyNSr9p2iS1r4aU2bslYFCu/Ud
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "GringottsAPI";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "GringottsFrontend";
 
-// Controllers, Swagger, etc.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpClient();
 
-// Configure CORS (ALLOW ONLY SPECIFIC ORIGINS)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddDefaultPolicy(policy =>
     {
         policy
-            .WithOrigins(
-                "http://localhost:4200",
-                "http://localhost:8100",
-                "http://gringottsproject.zapto.org:8100",
-                "http://161.97.92.174:8100",
-                "http://0.0.0.0:8100",
-                "http://127.0.0.1:8100"
-            )
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
 
-// Configure Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,7 +54,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Configure OpenTelemetry
 builder.Services.AddOpenTelemetry()
     .WithTracing(t =>
     {
@@ -83,7 +71,6 @@ builder.Services.AddOpenTelemetry()
         }
     });
 
-// Swagger configuration (after authentication setup)
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -111,33 +98,24 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// === HTTP REQUEST PIPELINE ===
-
-// Routing must come first
 app.UseRouting();
 
-// CORS must come AFTER Routing but BEFORE Authentication
-app.UseCors("AllowFrontend");
+app.UseCors();
 
-// Swagger UI (optional - dev environment)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Authentication and Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Prometheus Metrics
 app.UseMetricServer();
 app.UseHttpMetrics();
 
-// Controllers
 app.MapControllers();
 
 app.Run();
 
-// For integration tests
 public partial class Program { }
