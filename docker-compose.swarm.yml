@@ -27,7 +27,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     healthcheck:
-      test: ["CMD-SHELL", "rabbitmq-diagnostics ping -q"]
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -37,10 +37,13 @@ services:
     configs:
       - source: wait-for-it
         target: /wait-for-it.sh
-    entrypoint: ["sh", "-c"]
-    command: >
-      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
-      dotnet Gringotts.Migration.dll
+    entrypoint:
+      - "/wait-for-it.sh"
+      - "db"
+      - "5432"
+      - "--"
+      - "dotnet"
+      - "Gringotts.Migration.dll"
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -59,10 +62,13 @@ services:
     configs:
       - source: wait-for-it
         target: /wait-for-it.sh
-    entrypoint: ["sh", "-c"]
-    command: >
-      sh /wait-for-it.sh rabbitmq 5672 -- echo "RabbitMQ up" &&
-      dotnet Gringotts.TransactionPublisher.dll
+    entrypoint:
+      - "/wait-for-it.sh"
+      - "rabbitmq"
+      - "5672"
+      - "--"
+      - "dotnet"
+      - "Gringotts.TransactionPublisher.dll"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitmq
@@ -77,11 +83,17 @@ services:
     configs:
       - source: wait-for-it
         target: /wait-for-it.sh
-    entrypoint: ["sh", "-c"]
-    command: >
-      sh /wait-for-it.sh rabbitmq 5672 -- echo "RabbitMQ up" &&
-      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
-      dotnet Gringotts.TransactionConsumer.dll
+    entrypoint:
+      - "/wait-for-it.sh"
+      - "rabbitmq"
+      - "5672"
+      - "--"
+      - "/wait-for-it.sh"
+      - "db"
+      - "5432"
+      - "--"
+      - "dotnet"
+      - "Gringotts.TransactionConsumer.dll"
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -101,10 +113,13 @@ services:
     configs:
       - source: wait-for-it
         target: /wait-for-it.sh
-    entrypoint: ["sh", "-c"]
-    command: >
-      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
-      dotnet Gringotts.CurrencyService.dll
+    entrypoint:
+      - "/wait-for-it.sh"
+      - "db"
+      - "5432"
+      - "--"
+      - "dotnet"
+      - "Gringotts.CurrencyService.dll"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DB_HOST=db
@@ -122,10 +137,13 @@ services:
     configs:
       - source: wait-for-it
         target: /wait-for-it.sh
-    entrypoint: ["sh", "-c"]
-    command: >
-      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
-      dotnet Gringotts.LedgerService.dll
+    entrypoint:
+      - "/wait-for-it.sh"
+      - "db"
+      - "5432"
+      - "--"
+      - "dotnet"
+      - "Gringotts.LedgerService.dll"
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -142,11 +160,17 @@ services:
     configs:
       - source: wait-for-it
         target: /wait-for-it.sh
-    entrypoint: ["sh", "-c"]
-    command: >
-      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
-      sh /wait-for-it.sh rabbitmq 5672 -- echo "RabbitMQ up" &&
-      dotnet Gringotts.ApiGateway.dll
+    entrypoint:
+      - "/wait-for-it.sh"
+      - "db"
+      - "5432"
+      - "--"
+      - "/wait-for-it.sh"
+      - "rabbitmq"
+      - "5672"
+      - "--"
+      - "dotnet"
+      - "Gringotts.ApiGateway.dll"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DB_HOST=db

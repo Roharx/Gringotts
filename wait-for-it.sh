@@ -16,15 +16,11 @@ while :; do
   if (echo >"/dev/tcp/${HOST}/${PORT}") >/dev/null 2>&1; then
     break
   fi
-
-  now=$(date +%s)
-  if [ "$now" -ge "$end" ]; then
+  [ "$(date +%s)" -ge "$end" ] && {
     echo "Timeout after ${TIMEOUT}s waiting for ${HOST}:${PORT}" >&2
     exit 1
-  fi
-
+  }
   sleep 1
 done
 
-# Execute the remainder of the command
 exec "$@"
