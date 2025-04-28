@@ -160,16 +160,29 @@ export class VaultsComponent implements OnInit {
   };
   toggleFeature(feature: string) {
     const enabled = this.adminFeatureToggles[feature];
+    const url = `http://161.97.92.174:5000/api/gateway/admin/toggle-feature?feature=${feature}&enabled=${enabled}`;
 
-    this.api.post<any>(`admin/toggle-feature?feature=${feature}&enabled=${enabled}`, {})
-      .subscribe({
-        next: () => {
-          alert(`Feature '${feature}' has been ${enabled ? 'enabled' : 'disabled'}.`);
-        },
-        error: (err) => {
-          console.error('Failed to toggle feature', err);
-          alert('Failed to toggle feature.');
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.tokenService.getToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: '{}' // API expects an empty body
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to toggle feature');
         }
+        return response.json();
+      })
+      .then(data => {
+        alert(`Feature '${feature}' has been ${enabled ? 'enabled' : 'disabled'}.`);
+        console.log('Toggle response:', data);
+      })
+      .catch(err => {
+        console.error('Failed to toggle feature', err);
+        alert('Failed to toggle feature.');
       });
   }
   adminFeatureToggleKeys() {
