@@ -26,7 +26,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    # use built-in diagnostics rather than curl
     healthcheck:
       test: ["CMD-SHELL", "rabbitmq-diagnostics ping -q"]
       interval: 10s
@@ -40,7 +39,7 @@ services:
         target: /wait-for-it.sh
     entrypoint: ["sh", "-c"]
     command: >
-      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
       dotnet Gringotts.Migration.dll
     environment:
       - DB_HOST=db
@@ -62,7 +61,7 @@ services:
         target: /wait-for-it.sh
     entrypoint: ["sh", "-c"]
     command: >
-      sh /wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      sh /wait-for-it.sh rabbitmq 5672 -- echo "RabbitMQ up" &&
       dotnet Gringotts.TransactionPublisher.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -80,8 +79,8 @@ services:
         target: /wait-for-it.sh
     entrypoint: ["sh", "-c"]
     command: >
-      sh /wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
-      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh rabbitmq 5672 -- echo "RabbitMQ up" &&
+      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
       dotnet Gringotts.TransactionConsumer.dll
     environment:
       - DB_HOST=db
@@ -104,7 +103,7 @@ services:
         target: /wait-for-it.sh
     entrypoint: ["sh", "-c"]
     command: >
-      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
       dotnet Gringotts.CurrencyService.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -125,7 +124,7 @@ services:
         target: /wait-for-it.sh
     entrypoint: ["sh", "-c"]
     command: >
-      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
       dotnet Gringotts.LedgerService.dll
     environment:
       - DB_HOST=db
@@ -145,8 +144,8 @@ services:
         target: /wait-for-it.sh
     entrypoint: ["sh", "-c"]
     command: >
-      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
-      sh /wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      sh /wait-for-it.sh db 5432 -- echo "DB up" &&
+      sh /wait-for-it.sh rabbitmq 5672 -- echo "RabbitMQ up" &&
       dotnet Gringotts.ApiGateway.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
