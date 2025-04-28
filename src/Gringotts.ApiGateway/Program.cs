@@ -105,11 +105,10 @@ var app = builder.Build();
 
 app.UseRouting();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseCors(MyAllowSpecificOrigins);
 
