@@ -31,7 +31,9 @@ builder.Services.AddCors(options =>
                 "http://localhost:4200",
                 "http://localhost:8100",
                 "http://gringottsproject.zapto.org:8100",
-                "http://161.97.92.174:8100"
+                "http://161.97.92.174:8100",
+                "http://0.0.0.0:8100",
+                "http://127.0.0.1:8100"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
