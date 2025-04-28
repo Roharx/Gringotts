@@ -160,7 +160,7 @@ export class VaultsComponent implements OnInit {
   };
   toggleFeature(feature: string) {
     const enabled = this.adminFeatureToggles[feature];
-    const url = `http://161.97.92.174:5000/api/gateway/admin/toggle-feature?feature=${feature}&enabled=${enabled}`;
+    const url = `http://161.97.92.174:5000/api/admin/toggle-feature?feature=${feature}&enabled=${enabled}`;
 
     fetch(url, {
       method: 'POST',
