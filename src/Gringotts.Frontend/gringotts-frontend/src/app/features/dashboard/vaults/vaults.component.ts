@@ -149,30 +149,4 @@ export class VaultsComponent implements OnInit {
       }
     });
   }
-
-  adminFeatureToggles: Record<string, boolean> = {
-    login: true,
-    register: true,
-    transaction: true,
-    conversion: true,
-    recurring: true,
-    exchange: true
-  };
-  toggleFeature(feature: string) {
-    const enabled = this.adminFeatureToggles[feature];
-
-    this.api.post<any>(`admin/toggle-feature?feature=${feature}&enabled=${enabled}`, {})
-      .subscribe({
-        next: () => {
-          alert(`Feature '${feature}' has been ${enabled ? 'enabled' : 'disabled'}.`);
-        },
-        error: (err) => {
-          console.error('Failed to toggle feature', err);
-          alert('Failed to toggle feature.');
-        }
-      });
-  }
-  adminFeatureToggleKeys() {
-    return Object.keys(this.adminFeatureToggles);
-  }
 }

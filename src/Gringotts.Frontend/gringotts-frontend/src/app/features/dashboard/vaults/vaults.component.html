@@ -3,20 +3,6 @@
   <button class="logout-button" (click)="logout()">Leave Vault</button>
   <div class="key-name">{{ keyName }}</div>
 
-  <!-- ADMIN FEATURE TOGGLER -->
-  <div style="margin-top: 2rem;">
-    <h2 style="font-size: 1.5rem;">Admin Controls</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-top: 1rem;">
-      <div *ngFor="let key of adminFeatureToggleKeys()">
-        <label>
-          <input type="checkbox" [(ngModel)]="adminFeatureToggles[key]" (change)="toggleFeature(key)">
-          {{ key }}
-        </label>
-      </div>
-    </div>
-  </div>
-
-
   <!-- Candle swarm -->
   <div class="candle-swarm">
     <app-candle
