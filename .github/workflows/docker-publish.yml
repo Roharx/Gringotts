@@ -38,9 +38,7 @@ jobs:
           context: .
           file: src/Gringotts.Migration/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:migration-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:migration-latest
+          tags: ${{ env.IMAGE_PREFIX }}:migration-${{ env.VERSION }}
 
       - name: Build and push apigateway
         uses: docker/build-push-action@v5
@@ -48,9 +46,7 @@ jobs:
           context: .
           file: src/Gringotts.ApiGateway/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:apigateway-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:apigateway-latest
+          tags: ${{ env.IMAGE_PREFIX }}:apigateway-${{ env.VERSION }}
 
       - name: Build and push currencyservice
         uses: docker/build-push-action@v5
@@ -58,9 +54,7 @@ jobs:
           context: .
           file: src/Gringotts.CurrencyService/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:currencyservice-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:currencyservice-latest
+          tags: ${{ env.IMAGE_PREFIX }}:currencyservice-${{ env.VERSION }}
 
       - name: Build and push ledgerservice
         uses: docker/build-push-action@v5
@@ -68,9 +62,7 @@ jobs:
           context: .
           file: src/Gringotts.LedgerService/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:ledgerservice-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:ledgerservice-latest
+          tags: ${{ env.IMAGE_PREFIX }}:ledgerservice-${{ env.VERSION }}
 
       - name: Build and push transactionpublisher
         uses: docker/build-push-action@v5
@@ -78,9 +70,7 @@ jobs:
           context: .
           file: src/Gringotts.TransactionPublisher/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:transactionpublisher-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:transactionpublisher-latest
+          tags: ${{ env.IMAGE_PREFIX }}:transactionpublisher-${{ env.VERSION }}
 
       - name: Build and push transactionconsumer
         uses: docker/build-push-action@v5
@@ -88,9 +78,7 @@ jobs:
           context: .
           file: src/Gringotts.TransactionConsumer/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:transactionconsumer-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:transactionconsumer-latest
+          tags: ${{ env.IMAGE_PREFIX }}:transactionconsumer-${{ env.VERSION }}
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
@@ -98,6 +86,4 @@ jobs:
           context: ./src/Gringotts.Frontend/gringotts-frontend
           file: ./src/Gringotts.Frontend/gringotts-frontend/Dockerfile
           push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}:frontend-${{ env.VERSION }}
-            ${{ env.IMAGE_PREFIX }}:frontend-latest
+          tags: ${{ env.IMAGE_PREFIX }}:frontend-${{ env.VERSION }}
