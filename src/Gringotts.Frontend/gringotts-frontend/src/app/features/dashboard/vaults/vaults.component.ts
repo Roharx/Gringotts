@@ -93,4 +93,58 @@ export class VaultsComponent implements OnInit {
   goToTransfer()  { this.router.navigate(['/transfer']); }
   openConversion(v: Vault) { this.conversionVault = v; }
   closeConversion()        { this.conversionVault = null; }
+
+
+  // placeholder for demo:
+  giveMyselfMoney(currency: string) {
+    const payload = this.tokenService.getPayload();
+    const userId = payload?.sub || payload?.username;
+
+    if (!userId) {
+      console.error('No user ID found.');
+      return;
+    }
+
+    const amount = prompt(`How much ${currency} do you want to give yourself?`);
+
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      alert('Please enter a valid positive number.');
+      return;
+    }
+
+    const numAmount = Number(amount);
+
+    const money = {
+      galleons: 0,
+      sickles: 0,
+      knuts: 0
+    };
+    let dkkAmount = 0;
+
+    if (currency === 'Galleons') money.galleons = numAmount;
+    else if (currency === 'Sickles') money.sickles = numAmount;
+    else if (currency === 'Knuts') money.knuts = numAmount;
+    else if (currency === 'DKK') dkkAmount = numAmount;
+    else {
+      alert('Unsupported currency.');
+      return;
+    }
+
+    this.api.post<any>('transactions', {
+      userId: userId,
+      type: 0,                  // 0 = Credit (add funds)
+      amount: money,
+      dkkAmount: dkkAmount,
+      description: 'Self-granted reward'
+    }).subscribe({
+      next: () => {
+        alert(`Successfully added ${amount} ${currency}!`);
+        this.ngOnInit();
+      },
+      error: (err) => {
+        console.error('Failed to add money', err);
+        alert('Failed to add money.');
+      }
+    });
+  }
 }
