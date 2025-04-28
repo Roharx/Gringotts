@@ -24,10 +24,10 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularDev", policy =>
+    options.AddDefaultPolicy(policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200", "http://localhost:8100")
+            .SetIsOriginAllowed(origin => true)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
