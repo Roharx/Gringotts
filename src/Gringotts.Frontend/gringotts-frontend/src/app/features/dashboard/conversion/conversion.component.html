@@ -1,0 +1,16 @@
+<div class="conversion-form">
+  <h2>Currency Conversion</h2>
+  <input type="number" [(ngModel)]="amount" placeholder="Amount" />
+  <select [(ngModel)]="from">
+    <option>Galleons</option>
+    <option>Sickles</option>
+    <option>Knuts</option>
+  </select>
+  <select [(ngModel)]="to">
+    <option>Sickles</option>
+    <option>Galleons</option>
+    <option>Knuts</option>
+  </select>
+  <button (click)="convert()">Convert</button>
+  <p *ngIf="result">Result: {{ result }}</p>
+</div>

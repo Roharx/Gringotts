@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.CurrencyService;
+using Gringotts.Shared.Models.LedgerService;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
+using Gringotts.Shared.Models.LedgerService.UserService;
 
 namespace Gringotts.LedgerService.Data
 {
@@ -15,6 +19,7 @@ namespace Gringotts.LedgerService.Data
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<ExchangeRate> ExchangeRates { get; set; } = null!;
         public DbSet<RecurringTransaction> RecurringTransactions { get; set; } = null!;
+        public DbSet<Balance> Balances { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +52,23 @@ namespace Gringotts.LedgerService.Data
                       .IsUnique();
             });
 
+            // Configure Balance
+            modelBuilder.Entity<Balance>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+
+                entity.Property(b => b.DkkAmount)
+                      .HasColumnType("numeric(18,2)")
+                      .IsRequired();
+
+                entity.Property(b => b.Galleons).IsRequired();
+                entity.Property(b => b.Sickles).IsRequired();
+                entity.Property(b => b.Knuts).IsRequired();
+                entity.Property(b => b.UpdatedAt).IsRequired();
+
+                entity.HasIndex(b => b.UserId).IsUnique();
+            });
+
             // Configure Transaction
             modelBuilder.Entity<Transaction>(entity =>
             {
@@ -60,7 +82,6 @@ namespace Gringotts.LedgerService.Data
                       .IsRequired();
 
                 // Configure the owned Money type for Amount.
-                // This will map Money’s properties as columns on the Transactions table.
                 entity.OwnsOne(t => t.Amount, money =>
                 {
                     money.Property(m => m.Galleons)
@@ -74,7 +95,6 @@ namespace Gringotts.LedgerService.Data
                          .HasColumnType("integer");
                 });
 
-                // Configure relationships for foreign keys:
                 entity.HasOne(t => t.User)
                       .WithMany(u => u.Transactions)
                       .HasForeignKey(t => t.UserId)
@@ -90,9 +110,19 @@ namespace Gringotts.LedgerService.Data
             modelBuilder.Entity<ExchangeRate>(entity =>
             {
                 entity.HasKey(er => er.Id);
+
                 entity.Property(er => er.GalleonToDkk)
                       .IsRequired()
                       .HasColumnType("numeric(18,2)");
+
+                entity.Property(er => er.SickleToDkk)
+                      .IsRequired()
+                      .HasColumnType("numeric(18,2)");
+
+                entity.Property(er => er.KnutToDkk)
+                      .IsRequired()
+                      .HasColumnType("numeric(18,2)");
+
                 entity.Property(er => er.EffectiveDate)
                       .IsRequired();
             });

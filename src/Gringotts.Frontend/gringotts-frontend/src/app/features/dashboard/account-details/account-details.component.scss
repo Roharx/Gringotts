@@ -1,0 +1,7 @@
+@use '../../../app.component.scss' as *;
+
+.account-details {
+  @extend %form-container;
+  width: 300px;
+  gap: 0.5rem;
+}

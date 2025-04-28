@@ -6,6 +6,7 @@ datasources:
     access: proxy
     url: http://prometheus:9090
     isDefault: true
+    uid: prometheus
 
   - name: Jaeger
     type: jaeger
@@ -13,9 +14,9 @@ datasources:
     url: http://jaeger:16686
     jsonData:
       tracesToLogs:
-        datasourceUid: 'Prometheus'
+        datasourceUid: prometheus
         spanStartTimeShift: '1h'
         spanEndTimeShift: '1h'
-        tags: [{ key: 'http.method', value: 'GET' }]
+        tags: ['http.method=GET']
         filterByTraceID: true
         filterBySpanID: false

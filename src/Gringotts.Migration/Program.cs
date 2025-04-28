@@ -39,6 +39,8 @@ while (true)
     {
         using (var scope = host.Services.CreateScope())
         {
+            Thread.Sleep(5000);
+            Console.WriteLine("Waiting 5 secounds for the database...");
             var dbContext = scope.ServiceProvider.GetRequiredService<LedgerDbContext>();
             Console.WriteLine("Applying Ledger migrations...");
             dbContext.Database.Migrate();
@@ -57,7 +59,7 @@ while (true)
         }
 
         Console.WriteLine($"Attempt {attempts} failed (database is starting up). Waiting before retrying...");
-        Thread.Sleep(2000);
+        Thread.Sleep(10000);
     }
     catch (SocketException ex)
     {

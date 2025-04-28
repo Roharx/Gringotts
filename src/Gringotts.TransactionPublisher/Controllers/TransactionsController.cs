@@ -1,4 +1,5 @@
 ﻿using Gringotts.Shared.Models;
+using Gringotts.Shared.Models.LedgerService.TransactionService;
 using Gringotts.TransactionPublisher.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,0 +1,147 @@
+{
+  "title": "Recurring Transactions Dashboard",
+  "uid": "recurring-transactions-dashboard",
+  "schemaVersion": 36,
+  "version": 5,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Recurring Created",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "recurring_transactions_created_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "decimals": 0 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Creates",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "recurring_transactions_failed_creates_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "decimals": 0 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Recurring Created Over Time",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 5 },
+      "targets": [{ "expr": "rate(recurring_transactions_created_total[1m])" }],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "lineWidth": 2 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failed Creates Over Time",
+      "gridPos": { "x": 0, "y": 9, "w": 12, "h": 5 },
+      "targets": [{ "expr": "rate(recurring_transactions_failed_creates_total[1m])" }],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "lineWidth": 2 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Updated Successfully",
+      "gridPos": { "x": 0, "y": 14, "w": 6, "h": 4 },
+      "targets": [{ "expr": "recurring_transactions_updated_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "decimals": 0 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Updates",
+      "gridPos": { "x": 6, "y": 14, "w": 6, "h": 4 },
+      "targets": [{ "expr": "recurring_transactions_failed_updates_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "decimals": 0 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Recurring Updated Over Time",
+      "gridPos": { "x": 0, "y": 18, "w": 12, "h": 5 },
+      "targets": [{ "expr": "rate(recurring_transactions_updated_total[1m])" }],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "lineWidth": 2 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failed Updates Over Time",
+      "gridPos": { "x": 0, "y": 23, "w": 12, "h": 5 },
+      "targets": [{ "expr": "rate(recurring_transactions_failed_updates_total[1m])" }],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "lineWidth": 2 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Deleted",
+      "gridPos": { "x": 0, "y": 28, "w": 6, "h": 4 },
+      "targets": [{ "expr": "recurring_transactions_deleted_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "decimals": 0 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Deletes",
+      "gridPos": { "x": 6, "y": 28, "w": 6, "h": 4 },
+      "targets": [{ "expr": "recurring_transactions_failed_deletes_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "decimals": 0 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Recurring Deleted Over Time",
+      "gridPos": { "x": 0, "y": 32, "w": 12, "h": 5 },
+      "targets": [{ "expr": "rate(recurring_transactions_deleted_total[1m])" }],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "lineWidth": 2 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failed Deletes Over Time",
+      "gridPos": { "x": 0, "y": 37, "w": 12, "h": 5 },
+      "targets": [{ "expr": "rate(recurring_transactions_failed_deletes_total[1m])" }],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "lineWidth": 2 }
+      }
+    }
+  ]
+}

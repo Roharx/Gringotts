@@ -43,9 +43,6 @@ Thumbs.db
 TestResults/
 *.trx
 
-# Environment Variables
-*.env
-
 # Docker files (if you have local overrides, but keep docker-compose.yml in version control)
 docker-compose.override.yml
 

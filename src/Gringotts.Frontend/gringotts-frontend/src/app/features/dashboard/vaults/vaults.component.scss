@@ -1,0 +1,148 @@
+@use '../../../app.component.scss' as *;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle at center, #1a1612, #0f0c09 80%);
+  color: #f0e6d2;
+}
+
+.vaults-wrapper {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+  position: relative;
+}
+
+.logout-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #f0e6d2;
+  cursor: pointer;
+  user-select: none;
+  text-shadow:
+    0 0 5px rgba(245,215,118,0.8),
+    0 0 10px rgba(184,157,89,0.6);
+  transition: transform 0.2s ease, text-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    text-shadow:
+      0 0 8px rgba(245,215,118,1),
+      0 0 14px rgba(184,157,89,0.8);
+  }
+}
+
+.key-name {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  color: #f0e6d2;
+  user-select: none;
+  text-shadow:
+    0 0 4px rgba(245,215,118,0.8),
+    0 0 8px rgba(184,157,89,0.6);
+  pointer-events: none;
+}
+
+.candle-swarm {
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2.5rem;
+  pointer-events: none;
+  z-index: 10;
+}
+
+h1 {
+  @extend %glowing-header;
+  margin-bottom: 1rem;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.convert-button {
+  margin-top: 0.5rem;
+}
+
+.vault-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.vault-card {
+  background: rgba(20,18,15,0.85);
+  border: 2px solid #b89d59;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  animation: fadeIn 0.8s both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(184,157,89,0.6);
+  }
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  animation: popFlash 0.6s ease-out;
+  user-select: none;
+}
+
+.details {
+  user-select: none;
+  .label {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+  .amount {
+    font-size: 0.9rem;
+  }
+}
+
+.transact-button {
+  margin-top: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  align-self: center;
+  /* stop the click on the button from bubbling up to the card */
+  pointer-events: auto;
+}
+
+/* And ensure the vault-card doesn’t capture clicks on the button */
+.vault-card {
+  position: relative;
+
+  app-sweep-button.transact-button {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+@keyframes popFlash {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}

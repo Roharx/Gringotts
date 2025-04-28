@@ -1,42 +1,70 @@
-var builder = WebApplication.CreateBuilder(args);
+using Gringotts.CurrencyService.Services;
+using Gringotts.CurrencyService.Services.Interfaces;
+using Gringotts.CurrencyService.Services.Models;
+using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Prometheus;
+using System.Runtime.CompilerServices;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Make it visible to tests
+[assembly: InternalsVisibleTo("Gringotts.CurrencyService.Tests")]
+
+var builder = WebApplication.CreateBuilder(args);
+var isTesting = builder.Environment.IsEnvironment("Testing");
+if (!isTesting)
+{
+    var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "db";
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+    var dbName = Environment.GetEnvironmentVariable("POSTGRES_DB") ?? "gringotts";
+    var dbUser = Environment.GetEnvironmentVariable("POSTGRES_USER") ?? "gringotts";
+    var dbPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "gringotts";
+
+    var connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
+
+    builder.Services.AddDbContext<CurrencyDbContext>(opt =>
+        opt.UseNpgsql(connectionString));
+}
+
+builder.Services.AddScoped<ICurrencyConverter, CurrencyConverter>();
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ICurrencyConverter, CurrencyConverter>();
+
+// Monitoring: Prometheus & Jaeger
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracerProviderBuilder =>
+    {
+        tracerProviderBuilder
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("CurrencyService"))
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation();
+
+        if (!builder.Environment.IsEnvironment("Testing")) // only add Jaeger if not in Testing env
+        {
+            tracerProviderBuilder.AddJaegerExporter(o =>
+            {
+                o.AgentHost = Environment.GetEnvironmentVariable("JAEGER_AGENT_HOST") ?? "jaeger";
+                o.AgentPort = int.Parse(Environment.GetEnvironmentVariable("JAEGER_AGENT_PORT") ?? "6831");
+            });
+        }
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseHttpsRedirection();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+// Prometheus metrics
+app.UseMetricServer(); // exposes /metrics
+app.UseHttpMetrics();
 
+app.MapControllers();
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+public partial class Program { }

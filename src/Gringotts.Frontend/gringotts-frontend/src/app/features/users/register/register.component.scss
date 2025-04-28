@@ -1,0 +1,170 @@
+@use '../../../app.component.scss' as *;
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.register-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  height: 100vh;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scattered-candles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+
+  app-candle {
+    pointer-events: auto;
+  }
+}
+
+.book-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.book {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  background: #3a2b1a;
+  border: 3px solid #b89d59;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(184,157,89,0.4);
+}
+
+.pages {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.page {
+  flex: 1;
+  background: #f9f2e2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 10%;
+}
+
+.left-page {
+  border-right: 1px solid #b89d59;
+}
+
+.line {
+  width: 0;
+  height: 2px;
+  background: #b89d59;
+  margin: 0.3rem 0;
+  transform-origin: left;
+  animation: drawLine 1s ease-out forwards;
+  animation-delay: calc(var(--line-index) * 0.5s);
+}
+
+@keyframes drawLine {
+  0% { width: 0; }
+  100% { width: 80%; }
+}
+
+.go-back {
+  position: absolute;
+  top: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #f0e6d2;
+  cursor: pointer;
+  z-index: 4;
+  text-shadow:
+    0 0 3px rgba(245,215,118,0.8),
+    0 0 6px rgba(184,157,89,0.6);
+  transition: transform 0.2s ease, text-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateX(-1px) scale(1.05) rotate(-5deg);
+    text-shadow:
+      0 0 5px rgba(245,215,118,1),
+      0 0 10px rgba(184,157,89,0.8);
+  }
+}
+
+.register-container {
+  @extend %form-container;
+  animation: fadeIn 1s ease-out;
+  position: relative;
+  z-index: 3;
+  padding-top: 1rem;
+
+  button {
+    @extend %primary-button;
+    background: transparent;
+    color: #b89d59;
+    border: 2px solid #b89d59;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+
+    align-self: flex-start;
+    left: 0;
+    margin-top: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 1rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(255,255,255,0.6),
+          transparent
+      );
+      transform: skewX(-20deg);
+    }
+
+    &:hover {
+      background: #b89d59;
+      color: #fff;
+
+      &::before {
+        animation: lightSweep 0.5s forwards;
+      }
+    }
+  }
+}
+
+h1 {
+  @extend %glowing-header;
+}
+
+input {
+  @extend %input-field;
+}
+
+@keyframes lightSweep {
+  to { left: 120%; }
+}

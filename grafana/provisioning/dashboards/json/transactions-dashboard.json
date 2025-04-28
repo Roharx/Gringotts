@@ -1,0 +1,117 @@
+{
+  "title": "Transactions Dashboard",
+  "uid": "transactions-dashboard",
+  "schemaVersion": 36,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Transactions Created",
+      "description": "Total successful transaction creations.",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "transactions_created_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "none",
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Failed Transaction Creates",
+      "description": "Total failed transaction creations.",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [{ "expr": "transactions_failed_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "none",
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Transactions Created Over Time",
+      "description": "Trend of successful transaction creations.",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 6 },
+      "targets": [{
+        "expr": "rate(transactions_created_total[1m])"
+      }],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ops",
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failed Transactions Over Time",
+      "description": "Trend of failed transaction attempts.",
+      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 6 },
+      "targets": [{
+        "expr": "rate(transactions_failed_total[1m])"
+      }],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ops",
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Transaction Filters Performed",
+      "description": "Total number of times transactions were filtered.",
+      "gridPos": { "x": 0, "y": 16, "w": 6, "h": 4 },
+      "targets": [{ "expr": "transactions_filtered_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "none",
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Get By ID Lookups",
+      "description": "Total successful transaction lookups by ID.",
+      "gridPos": { "x": 6, "y": 16, "w": 6, "h": 4 },
+      "targets": [{ "expr": "transactions_lookup_by_id_total" }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "horizontal",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "none",
+          "decimals": 0
+        }
+      }
+    }
+  ]
+}

@@ -22,7 +22,62 @@ namespace Gringotts.LedgerService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Gringotts.Shared.Models.Category", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.CurrencyService.Balance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("DkkAmount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<int>("Galleons")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Knuts")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sickles")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Balances");
+                });
+
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.ExchangeRate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("GalleonToDkk")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal>("KnutToDkk")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal>("SickleToDkk")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExchangeRates");
+                });
+
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.TransactionService.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,24 +95,7 @@ namespace Gringotts.LedgerService.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Gringotts.Shared.Models.ExchangeRate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("EffectiveDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<decimal>("GalleonToDkk")
-                        .HasColumnType("numeric(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ExchangeRates");
-                });
-
-            modelBuilder.Entity("Gringotts.Shared.Models.RecurringTransaction", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.TransactionService.RecurringTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,7 +128,7 @@ namespace Gringotts.LedgerService.Migrations
                     b.ToTable("RecurringTransactions");
                 });
 
-            modelBuilder.Entity("Gringotts.Shared.Models.Transaction", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.TransactionService.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,7 +161,7 @@ namespace Gringotts.LedgerService.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Gringotts.Shared.Models.User", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.UserService.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,19 +194,19 @@ namespace Gringotts.LedgerService.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Gringotts.Shared.Models.Transaction", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.TransactionService.Transaction", b =>
                 {
-                    b.HasOne("Gringotts.Shared.Models.Category", "Category")
+                    b.HasOne("Gringotts.Shared.Models.LedgerService.TransactionService.Category", "Category")
                         .WithMany("Transactions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Gringotts.Shared.Models.User", "User")
+                    b.HasOne("Gringotts.Shared.Models.LedgerService.UserService.User", "User")
                         .WithMany("Transactions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.OwnsOne("Gringotts.Shared.Models.Money", "Amount", b1 =>
+                    b.OwnsOne("Gringotts.Shared.Models.CurrencyService.Money", "Amount", b1 =>
                         {
                             b1.Property<Guid>("TransactionId")
                                 .HasColumnType("uuid");
@@ -201,12 +239,12 @@ namespace Gringotts.LedgerService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Gringotts.Shared.Models.Category", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.TransactionService.Category", b =>
                 {
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("Gringotts.Shared.Models.User", b =>
+            modelBuilder.Entity("Gringotts.Shared.Models.LedgerService.UserService.User", b =>
                 {
                     b.Navigation("Transactions");
                 });

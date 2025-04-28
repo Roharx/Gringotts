@@ -1,0 +1,48 @@
+﻿groups:
+  - name: gringotts-alerts
+    interval: 15s
+    rules:
+      - alert: HighScrapeDuration
+        expr: rate(scrape_duration_seconds_sum[1m]) / rate(scrape_duration_seconds_count[1m]) > 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High scrape duration detected"
+          description: "The average scrape duration is greater than 1s over the past minute."
+
+      - alert: TargetDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus target is down"
+          description: "One or more targets are not responding to Prometheus scrapes."
+
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_seconds_total[1m]) * 100 > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "Prometheus is using over 80% CPU on average over 1 minute."
+
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / 1024 / 1024 > 500
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Prometheus is using more than 500 MB of memory."
+
+      - alert: LowSampleIngestion
+        expr: rate(prometheus_tsdb_head_samples_appended_total[1m]) < 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low sample ingestion rate"
+          description: "Prometheus is ingesting very few samples—potential scrape issue."

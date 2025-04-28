@@ -1,0 +1,20 @@
+<div
+  class="apparition-wrapper"
+  [style.--candle-height]="height"
+  [style.--flame-width]="flameWidth"
+  [style.--flame-height]="flameHeight"
+  [style.--candle-delay]="delay"
+  [style.--flame-delay]="flameDelay"
+  cdkDrag
+  [cdkDragFreeDragPosition]="{ x: initialX, y: initialY }"
+>
+  <div class="geo geo-circle"></div>
+  <div class="geo geo-triangle"></div>
+  <div class="geo geo-square"></div>
+  <div class="pop-flash"></div>
+
+  <div class="candle">
+    <div class="flame"></div>
+    <div class="wick"></div>
+  </div>
+</div>
