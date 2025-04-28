@@ -150,7 +150,7 @@ export class VaultsComponent implements OnInit {
     });
   }
 
-  adminFeatureToggles = {
+  adminFeatureToggles: Record<string, boolean> = {
     login: true,
     register: true,
     transaction: true,
@@ -173,6 +173,7 @@ export class VaultsComponent implements OnInit {
         }
       });
   }
+
   adminFeatureToggleKeys() {
     return Object.keys(this.adminFeatureToggles);
   }
