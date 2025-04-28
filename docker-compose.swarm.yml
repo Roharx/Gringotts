@@ -10,7 +10,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL","pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -21,7 +21,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15672/api/overview"]
+      test: ["CMD","curl","-f","http://localhost:15672/api/overview"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -99,8 +99,7 @@ services:
     ports:
       - "8100:80"
     depends_on:
-      apigateway:
-        condition: service_started
+      - apigateway
 
   prometheus:
     image: prom/prometheus:latest
