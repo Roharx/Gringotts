@@ -15,8 +15,8 @@ jobs:
       matrix:
         include:
           - name: migrations
-            context: src/Gringotts.Migration
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: src/Gringotts.Migration/Dockerfile
           - name: apigateway
             context: .
             dockerfile: src/Gringotts.ApiGateway/Dockerfile
