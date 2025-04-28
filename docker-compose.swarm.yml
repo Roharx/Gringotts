@@ -3,14 +3,16 @@
 services:
   db:
     image: postgres:14-alpine
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER=gringotts
+      - POSTGRES_PASSWORD=gringotts
+      - POSTGRES_DB=gringotts
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL","pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL","pg_isready -U gringotts"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -28,8 +30,12 @@ services:
 
   migrations:
     image: roharx/gringotts-migration:latest
-    env_file:
-      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_USER=gringotts
+      - POSTGRES_PASSWORD=gringotts
+      - POSTGRES_DB=gringotts
     depends_on:
       - db
     command:
@@ -41,10 +47,10 @@ services:
 
   transactionpublisher:
     image: roharx/gringotts-transactionpublisher:latest
-    env_file:
-      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
     depends_on:
       - rabbitmq
     ports:
@@ -52,8 +58,14 @@ services:
 
   transactionconsumer:
     image: roharx/gringotts-transactionconsumer:latest
-    env_file:
-      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_USER=gringotts
+      - POSTGRES_PASSWORD=gringotts
+      - POSTGRES_DB=gringotts
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
     depends_on:
       - db
       - rabbitmq
@@ -62,10 +74,13 @@ services:
 
   currencyservice:
     image: roharx/gringotts-currencyservice:latest
-    env_file:
-      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_USER=gringotts
+      - POSTGRES_PASSWORD=gringotts
+      - POSTGRES_DB=gringotts
     depends_on:
       - db
     ports:
@@ -73,8 +88,12 @@ services:
 
   ledgerservice:
     image: roharx/gringotts-ledgerservice:latest
-    env_file:
-      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_USER=gringotts
+      - POSTGRES_PASSWORD=gringotts
+      - POSTGRES_DB=gringotts
     depends_on:
       - db
     ports:
@@ -82,10 +101,20 @@ services:
 
   apigateway:
     image: roharx/gringotts-apigateway:latest
-    env_file:
-      - .env
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - DB_HOST=db
+      - DB_PORT=5432
+      - POSTGRES_USER=gringotts
+      - POSTGRES_PASSWORD=gringotts
+      - POSTGRES_DB=gringotts
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - Jwt__Issuer=GringottsAPI
+      - Jwt__Audience=GringottsFrontend
+      - Jwt__Key=lyowRyNSr9p2iS1r4aU2bslYFCu/Udu/cfrX7SRa3ps=
     depends_on:
       - currencyservice
       - ledgerservice
@@ -132,7 +161,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: yourpassword
+      - GF_SECURITY_ADMIN_PASSWORD=yourpassword
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/provisioning/dashboards/json:/etc/grafana/provisioning/dashboards/json
