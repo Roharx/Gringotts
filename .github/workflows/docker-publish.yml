@@ -1,4 +1,4 @@
-﻿name: Build & Push All Services to gringotts-deployment
+﻿name: Build & Push Docker Images
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  DOCKERHUB_REPO: roharx/gringotts-deployment
+  DOCKERHUB_NAMESPACE: roharx
 
 jobs:
   build-and-push:
@@ -15,27 +15,22 @@ jobs:
     strategy:
       matrix:
         include:
-          - service: apigateway
+          - name: apigateway
             context: .
             dockerfile: src/Gringotts.ApiGateway/Dockerfile
-
-          - service: transactionpublisher
+          - name: transactionpublisher
             context: .
             dockerfile: src/Gringotts.TransactionPublisher/Dockerfile
-
-          - service: transactionconsumer
+          - name: transactionconsumer
             context: .
             dockerfile: src/Gringotts.TransactionConsumer/Dockerfile
-
-          - service: currencyservice
+          - name: currencyservice
             context: .
             dockerfile: src/Gringotts.CurrencyService/Dockerfile
-
-          - service: ledgerservice
+          - name: ledgerservice
             context: .
             dockerfile: src/Gringotts.LedgerService/Dockerfile
-
-          - service: frontend
+          - name: frontend
             context: ./src/Gringotts.Frontend/gringotts-frontend
             dockerfile: Dockerfile
 
@@ -43,7 +38,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up QEMU (for multi-arch)
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
@@ -55,12 +50,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & push ${{ matrix.service }}
+      - name: Build & Push ${{ matrix.name }}
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPO }}:${{ matrix.service }}-latest
-            ${{ env.DOCKERHUB_REPO }}:${{ matrix.service }}-${{ github.sha }}
+            ${{ env.DOCKERHUB_NAMESPACE }}/gringotts-${{ matrix.name }}:latest
+            ${{ env.DOCKERHUB_NAMESPACE }}/gringotts-${{ matrix.name }}:${{ github.sha }}
