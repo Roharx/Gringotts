@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private baseUrl = 'http://localhost:5000/api/gateway';
+  private baseUrl = 'http://gringottsproject.zapto.org:5000/api/gateway';
 
   constructor(private http: HttpClient) {}
 
