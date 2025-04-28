@@ -17,8 +17,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
-      - "5672:5672"   # AMQP protocol
-      - "15672:15672" # Management UI
+      - "5672:5672"
+      - "15672:15672"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:15672/api/overview"]
       interval: 10s
@@ -100,12 +100,22 @@ services:
     ports:
       - "5000:8080"
 
-  # Monitoring components
-
+  frontend:
+    build:
+      context: ./src/Gringotts.Frontend/gringotts-frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8100:80"
+    depends_on:
+      apigateway:
+        condition: service_started
+    restart: unless-stopped  
+  
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro    
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./prometheus/rules.yml:/etc/prometheus/rules.yml:ro
     ports:
       - "9090:9090"
@@ -127,7 +137,7 @@ services:
       - "14268:14268"
       - "14250:14250"
       - "9411:9411"
-        
+  
   grafana:
     image: grafana/grafana:latest
     ports:

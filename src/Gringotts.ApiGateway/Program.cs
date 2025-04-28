@@ -15,6 +15,7 @@ var jwtKey = builder.Configuration["Jwt:Key"] ?? "lyowRyNSr9p2iS1r4aU2bslYFCu/Ud
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "GringottsAPI";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "GringottsFrontend";
 
+// controllers, swagger, etc.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,7 +26,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularDev", policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200")
+            .WithOrigins("http://localhost:4200", "http://localhost:8100")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -59,8 +60,8 @@ builder.Services.AddOpenTelemetry()
     .WithTracing(t =>
     {
         t.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApiGateway"))
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation();
+         .AddAspNetCoreInstrumentation()
+         .AddHttpClientInstrumentation();
 
         if (!isTesting)
         {
@@ -74,20 +75,21 @@ builder.Services.AddOpenTelemetry()
 
 var app = builder.Build();
 
+app.UseRouting();
+
 app.UseCors("AllowAngularDev");
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.UseMetricServer();
 app.UseHttpMetrics();
 
 app.MapControllers();
+
 app.Run();
 
 public partial class Program { }
