@@ -1,5 +1,9 @@
 ﻿version: "3.8"
 
+configs:
+  wait-for-it:
+    file: ./wait-for-it.sh
+
 services:
   db:
     image: postgres:14-alpine
@@ -22,17 +26,21 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    # use built-in diagnostics rather than curl
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15672/api/overview"]
+      test: ["CMD-SHELL", "rabbitmq-diagnostics ping -q"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   migrations:
     image: roharx/gringotts-migration:latest
-    entrypoint: ["/bin/sh", "-c"]
+    configs:
+      - source: wait-for-it
+        target: /wait-for-it.sh
+    entrypoint: ["sh", "-c"]
     command: >
-      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
       dotnet Gringotts.Migration.dll
     environment:
       - DB_HOST=db
@@ -49,9 +57,12 @@ services:
 
   transactionpublisher:
     image: roharx/gringotts-transactionpublisher:latest
-    entrypoint: ["/bin/sh", "-c"]
+    configs:
+      - source: wait-for-it
+        target: /wait-for-it.sh
+    entrypoint: ["sh", "-c"]
     command: >
-      ./wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      sh /wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
       dotnet Gringotts.TransactionPublisher.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -64,10 +75,13 @@ services:
 
   transactionconsumer:
     image: roharx/gringotts-transactionconsumer:latest
-    entrypoint: ["/bin/sh", "-c"]
+    configs:
+      - source: wait-for-it
+        target: /wait-for-it.sh
+    entrypoint: ["sh", "-c"]
     command: >
-      ./wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
-      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
       dotnet Gringotts.TransactionConsumer.dll
     environment:
       - DB_HOST=db
@@ -78,16 +92,19 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
     depends_on:
-      - db
       - rabbitmq
+      - db
     ports:
       - "5004:8080"
 
   currencyservice:
     image: roharx/gringotts-currencyservice:latest
-    entrypoint: ["/bin/sh", "-c"]
+    configs:
+      - source: wait-for-it
+        target: /wait-for-it.sh
+    entrypoint: ["sh", "-c"]
     command: >
-      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
       dotnet Gringotts.CurrencyService.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -103,9 +120,12 @@ services:
 
   ledgerservice:
     image: roharx/gringotts-ledgerservice:latest
-    entrypoint: ["/bin/sh", "-c"]
+    configs:
+      - source: wait-for-it
+        target: /wait-for-it.sh
+    entrypoint: ["sh", "-c"]
     command: >
-      ./wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
       dotnet Gringotts.LedgerService.dll
     environment:
       - DB_HOST=db
@@ -120,10 +140,13 @@ services:
 
   apigateway:
     image: roharx/gringotts-apigateway:latest
-    entrypoint: ["/bin/sh", "-c"]
+    configs:
+      - source: wait-for-it
+        target: /wait-for-it.sh
+    entrypoint: ["sh", "-c"]
     command: >
-      ./wait-for-it.sh db:5432 -- echo "DB up" &&
-      ./wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
+      sh /wait-for-it.sh db:5432 -- echo "DB up" &&
+      sh /wait-for-it.sh rabbitmq:5672 -- echo "RabbitMQ up" &&
       dotnet Gringotts.ApiGateway.dll
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
